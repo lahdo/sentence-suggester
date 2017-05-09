@@ -1,1 +1,1 @@
-# sentance-suggester
+# Sentence Suggester
