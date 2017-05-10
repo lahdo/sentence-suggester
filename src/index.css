@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+html {
+  background-color: #e6e6e6;
+}
+
+#root {
+  background-color: #e6e6e6;
+}
