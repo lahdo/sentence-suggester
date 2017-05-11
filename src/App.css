@@ -40,11 +40,11 @@ nav.nav-bar .navbar-brand {
 .page {
     background: #fff;
     color: #000;
-    width: 21cm;
+    /*width: 21cm;*/
     height: 29.7cm;
     padding: 2cm;
     display: block;
-    margin: 100px auto;
+    margin: 7px auto;
     margin-bottom: 0.5cm;
     box-shadow: 1px 2px 3px #ddd;
     font-size: 24px;
@@ -101,4 +101,14 @@ nav.nav-bar .navbar-brand {
 
 .hidden {
     display: none;
+}
+
+.styleSelector {
+    margin: 100px auto 10px auto;
+}
+
+.currentStyleHeader {
+    margin-left: 2px;
+    margin-right: 8px;
+    font-size: 18px;
 }

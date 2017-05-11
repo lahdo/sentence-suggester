@@ -7,7 +7,7 @@ export default class NavigationBar extends Component {
             <Navbar fixedTop className="nav-bar">
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <a href="/"><strong>Sentence Suggester</strong> - write 10x quicker with a style you like</a>
+                        <a href="/"><strong>Sentence Suggester</strong> - write 10x faster with a jargon you like</a>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>

@@ -8,6 +8,7 @@ export default class Page extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.onClick = this.onClick.bind(this);
         this.onInput = this.onInput.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
         this.insertCaretIndicator = this.insertCaretIndicator.bind(this);
         this.removeCaretIndicator = this.removeCaretIndicator.bind(this);
     }
@@ -16,19 +17,28 @@ export default class Page extends Component {
         let caretCoordinates = {};
         let offsets = {};
         const minOffsets = {
-            top: 181,
-            left: (window.innerWidth - 793) / 2 + 78
+            top: 234,
+            left: 78
         };
 
         this.removeCaretIndicator();
         this.insertCaretIndicator();
 
         offsets = document.getElementById('caretIndicator').getBoundingClientRect();
-        caretCoordinates.top = offsets.top > minOffsets.top ? offsets.top : minOffsets.top;
-        caretCoordinates.left = offsets.left > minOffsets.left  ? offsets.left  : minOffsets.left;
 
-        console.log('Caret has new coordinates: ', caretCoordinates.top + ', ' + caretCoordinates.left);
-        console.log('Caret possible coordinates: ', offsets.top + ', ' + offsets.left);
+        let offsetTop = 150;
+        let offsetLeft = offsets.left - ((window.innerWidth - this.refs.page.offsetWidth) / 2);
+
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        console.log('offsets.top: ', offsets.top);
+
+        caretCoordinates.top = offsets.top - offsetTop + scrollTop;
+        caretCoordinates.left = offsetLeft > minOffsets.left ? offsetLeft : minOffsets.left;
+
+        // console.log('Caret has new coordinates: ', caretCoordinates.top + ', ' + caretCoordinates.left);
+        // console.log('Caret possible coordinates: ', offsets.top + ', ' + offsets.left);
+
+        console.log('scrollTop', scrollTop);
 
         return caretCoordinates;
     }
@@ -65,24 +75,44 @@ export default class Page extends Component {
     }
 
     handleChange(e) {
-        e.preventDefault();
         let caretCoordinates = this.getCaretCoordinates();
         this.props.setCaretCoordinates(caretCoordinates);
     }
 
     onClick(e) {
+        e.preventDefault();
         this.handleChange(e);
     }
 
     onInput(e) {
+        e.preventDefault();
         this.refs.page.textContent ? this.props.setCardVisibility(true) : this.props.setCardVisibility(false);
         this.handleChange(e);
+    }
+
+    onKeyDown(e) {
+        this.handleChange(e);
+        // if (e.keyCode === 37) { // LEFT
+        //     this.handleChange(e);
+        //     console.log('LEFT');
+        // }
+        // if (e.keyCode === 39) { // RIGHT
+        //     this.handleChange(e);
+        //     console.log('RIGHT');
+        // }
+        // if (event.keyCode === 38) { // UP
+        //     console.log('UP');
+        // }
+        // if (event.keyCode === 40) { // DOWN
+        //     console.log('DOWN');
+        // }
     }
 
     render() {
         return (
             <div ref="page"
                  className="page"
+                 onKeyDown={this.onKeyDown}
                  onClick={this.onClick}
                  onInput={this.onInput}
                  contentEditable="true">

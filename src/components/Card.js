@@ -17,9 +17,17 @@ export default class Card extends Component {
                 <div className='sentences-list'
                      style={cardStyles}>
                     <ul className='sentences'>
-                        <li>Please note that this library is</li>
-                        <li>Please take a note</li>
-                        <li>Please make sure</li>
+                        {
+                            this.props.suggestions.map(function (suggestion, i) {
+                                return (
+                                    <li className="suggestion"
+                                                   onClick={() => this.props.selectSuggestion(suggestion)}
+                                                   key={i}>
+                                        {suggestion}
+                                    </li>
+                                );
+                            }, this)
+                        }
                     </ul>
                 </div>
             </div>
