@@ -108,7 +108,11 @@ nav.nav-bar .navbar-brand {
 }
 
 .currentStyleHeader {
-    margin-left: 2px;
-    margin-right: 8px;
+    margin-left: 10px;
+    margin-right: 3px;
     font-size: 18px;
+}
+
+#caretIndicator {
+
 }

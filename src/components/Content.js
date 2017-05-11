@@ -40,9 +40,13 @@ export default class Content extends Component {
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <Page setCardVisibility={this.props.setCardVisibility}
+                            <Page firstCharCaretCoordinates={this.props.firstCharCaretCoordinates}
+                                  setFirstCharCaretCoordinates={this.props.setFirstCharCaretCoordinates}
+                                  setCardVisibility={this.props.setCardVisibility}
                                   setCaretCoordinates={this.props.setCaretCoordinates}
                                   selectedSuggestion={this.props.selectedSuggestion}
+                                  cachedSelection={this.props.cachedSelection}
+                                  setCachedSelection={this.props.setCachedSelection}
                                   caretCoordinates={this.props.caretCoordinates}/>
                             {
                                 this.props.cardVisibility ?

@@ -10,7 +10,18 @@ export default class Page extends Component {
         this.onInput = this.onInput.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
         this.insertCaretIndicator = this.insertCaretIndicator.bind(this);
+        this.insert = this.insert.bind(this);
+        this.insertTextAtCursor = this.insertTextAtCursor.bind(this);
         this.removeCaretIndicator = this.removeCaretIndicator.bind(this);
+        this.getCaretRelativePosition = this.getCaretRelativePosition.bind(this);
+        this.getCurrentSelection = this.getCurrentSelection.bind(this);
+
+    }
+
+    componentWillReceiveProps(nextProps, nextState) {
+        if (this.props.selectedSuggestion !== nextProps.selectedSuggestion) {
+            this.insertTextAtCursor(nextProps.selectedSuggestion);
+        }
     }
 
     getCaretCoordinates() {
@@ -32,15 +43,67 @@ export default class Page extends Component {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         console.log('offsets.top: ', offsets.top);
 
+        // if (this.getCaretRelativePosition(this.refs.page) === 0
+        //     && this.props.firstCharCaretCoordinates.hasOwnProperty('top')) {
+        //     caretCoordinates.top = this.props.firstCharCaretCoordinates.top;
+        // }
+        // else {
+        //     caretCoordinates.top = offsets.top - offsetTop + scrollTop;
+        // }
         caretCoordinates.top = offsets.top - offsetTop + scrollTop;
         caretCoordinates.left = offsetLeft > minOffsets.left ? offsetLeft : minOffsets.left;
-
-        // console.log('Caret has new coordinates: ', caretCoordinates.top + ', ' + caretCoordinates.left);
-        // console.log('Caret possible coordinates: ', offsets.top + ', ' + offsets.left);
 
         console.log('scrollTop', scrollTop);
 
         return caretCoordinates;
+    }
+
+    getCaretRelativePosition(editableDiv) {
+        var caretPos = 0,
+            sel, range;
+        if (window.getSelection) {
+            sel = window.getSelection();
+            if (sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                if (range.commonAncestorContainer.parentNode == editableDiv) {
+                    caretPos = range.endOffset;
+                }
+            }
+        } else if (document.selection && document.selection.createRange) {
+            range = document.selection.createRange();
+            if (range.parentElement() == editableDiv) {
+                var tempEl = document.createElement("span");
+                editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+                var tempRange = range.duplicate();
+                tempRange.moveToElementText(tempEl);
+                tempRange.setEndPoint("EndToEnd", range);
+                caretPos = tempRange.text.length;
+            }
+        }
+        return caretPos;
+    }
+
+
+    insertTextAtCursor(text) {
+        let sel, range, html;
+        sel = this.props.cachedSelection;
+        if (window.getSelection) {
+            if (sel.getRangeAt && sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(document.createTextNode(text));
+            }
+        } else if (document.selection && document.selection.createRange) {
+            sel.createRange().text = text;
+        }
+    }
+
+    getCurrentSelection() {
+        if (window.getSelection) {
+            return window.getSelection();
+        } else if (document.selection && document.selection.createRange) {
+            return document.selection;
+        }
     }
 
     removeCaretIndicator() {
@@ -74,9 +137,36 @@ export default class Page extends Component {
         }
     }
 
+    insert(html) { // http://stackoverflow.com/a/6691294/3959662
+        let selection, range;
+        let element = document.createElement('div');
+        element.innerHTML = html;
+
+        if (window.getSelection) {
+            selection = window.getSelection();
+            if (selection.getRangeAt && selection.rangeCount) {
+                range = selection.getRangeAt(0);
+
+                let fragment = document.createDocumentFragment(), node, lastNode;
+
+                while ((node = element.firstChild)) {
+                    lastNode = fragment.appendChild(node);
+                }
+                range.insertNode(fragment);
+            }
+        } else if (document.selection && document.selection.type !== "Control") {
+            document.selection.createRange().pasteHTML(html); // IE < 9
+        }
+    }
+
     handleChange(e) {
         let caretCoordinates = this.getCaretCoordinates();
         this.props.setCaretCoordinates(caretCoordinates);
+
+        this.props.setCachedSelection(this.getCurrentSelection());
+        // if (this.refs.page.textContent.length === 1) {
+        //     this.props.setFirstCharCaretCoordinates(caretCoordinates);
+        // }
     }
 
     onClick(e) {

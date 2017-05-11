@@ -6,8 +6,7 @@ export default class StyleSelector extends Component {
     render() {
         return (
             <div className="styleSelector">
-                <span className="currentStyleHeader">Current Style (Jargon): </span>
-                <DropdownButton id="styleSelector" title="Select Style">
+                <DropdownButton id="styleSelector" title="Select Jargon">
                     {
                         this.props.styles.map(function (style, i) {
                             return (
@@ -20,6 +19,8 @@ export default class StyleSelector extends Component {
                         }, this)
                     }
                 </DropdownButton>
+                <span className="currentStyleHeader">Current: </span>
+                <strong>{this.props.selectedStyle}</strong>
             </div>
         );
     }
