@@ -1,6 +1,6 @@
 import markovify
 import json
-from suggester import Suggester
+from suggester import Text
 
 def smoke_test():
     # Get raw text as string.
@@ -60,10 +60,10 @@ def suggest(beginning, **kwargs):
         model_json = json.load(data_file)
 
 #     text_model = markovify.Text.from_json(model_json)
-    text_model = Suggester.from_json(model_json)
+    text_model = Text.from_json(model_json)
 
     for i in range(5):
-        print(text_model.make_sentence_with_start(beginning))
+        print(text_model.make_predictions(beginning))
 
 
 # smoke_test()
