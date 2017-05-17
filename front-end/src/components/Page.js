@@ -9,18 +9,25 @@ export default class Page extends Component {
         this.onClick = this.onClick.bind(this);
         this.onInput = this.onInput.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+        this.handleKeyUp = this.handleKeyUp.bind(this);
         this.insertCaretIndicator = this.insertCaretIndicator.bind(this);
         this.insert = this.insert.bind(this);
         this.insertTextAtCursor = this.insertTextAtCursor.bind(this);
         this.removeCaretIndicator = this.removeCaretIndicator.bind(this);
         this.getCaretRelativePosition = this.getCaretRelativePosition.bind(this);
         this.getCurrentSelection = this.getCurrentSelection.bind(this);
-
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (this.props.selectedSuggestion !== nextProps.selectedSuggestion) {
             this.insertTextAtCursor(nextProps.selectedSuggestion);
+        }
+    }
+
+    handleKeyUp(event) {
+        const { value } = event.target;
+        if (value) {
+            this.props.onSearch(value);
         }
     }
 
@@ -155,11 +162,7 @@ export default class Page extends Component {
     handleChange(e) {
         let caretCoordinates = this.getCaretCoordinates();
         this.props.setCaretCoordinates(caretCoordinates);
-
         this.props.setCachedSelection(this.getCurrentSelection());
-        // if (this.refs.page.textContent.length === 1) {
-        //     this.props.setFirstCharCaretCoordinates(caretCoordinates);
-        // }
     }
 
     onClick(e) {
@@ -175,6 +178,13 @@ export default class Page extends Component {
 
     onKeyDown(e) {
         this.handleChange(e);
+
+        // const { value } = e.target;
+        // if (value) {
+        const range = window.getSelection().getRangeAt(0);
+        console.log("range: ", range.toString());
+        this.props.onSearch('the other');
+        // }
         // if (e.keyCode === 37) { // LEFT
         //     this.handleChange(e);
         //     console.log('LEFT');
@@ -195,9 +205,10 @@ export default class Page extends Component {
         return (
             <div ref="page"
                  className="page"
-                 onKeyDown={this.onKeyDown}
-                 onClick={this.onClick}
-                 onInput={this.onInput}
+                 onKeyUp={ this.handleKeyUp }
+                 onKeyDown={ this.onKeyDown }
+                 onClick={ this.onClick }
+                 onInput={ this.onInput }
                  contentEditable="true">
             </div>
         );

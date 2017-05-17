@@ -47,6 +47,7 @@ export default class Content extends Component {
                                   selectedSuggestion={this.props.selectedSuggestion}
                                   cachedSelection={this.props.cachedSelection}
                                   setCachedSelection={this.props.setCachedSelection}
+                                  onSearch={this.props.onSearch}
                                   caretCoordinates={this.props.caretCoordinates}/>
                             {
                                 this.props.cardVisibility ?

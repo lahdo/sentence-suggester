@@ -25,11 +25,7 @@ export default class SentenceSuggester extends Component {
                 top: 0,
                 left: 0
             },
-            suggestions: [
-                'Please note that this library is',
-                'Please take a note',
-                'Please make sure'
-            ],
+            suggestions: [],
             styles: this.styles,
             cachedSelection: {},
             firstCharCaretCoordinates: {},
@@ -44,6 +40,8 @@ export default class SentenceSuggester extends Component {
         this.setFirstCharCaretCoordinates = this.setFirstCharCaretCoordinates.bind(this);
         this.setCachedSelection = this.setCachedSelection.bind(this);
         this.selectStyle = this.selectStyle.bind(this);
+        this.doSearchRequest = this.doSearchRequest.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentDidMount() {
@@ -77,6 +75,45 @@ export default class SentenceSuggester extends Component {
         this.setState({'cachedSelection': cachedSelection});
     }
 
+    doSearchRequest() {
+        const base = 'http://127.0.0.1:8000/api/v1/suggestions/';
+
+        let myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        fetch(`${base}`, {
+                method: 'POST',
+                body: JSON.stringify({ words: ['the', 'other']}),//this.state.words
+                headers: myHeaders
+            }
+        ).then(
+            response => response.json()
+        ).then(
+            data => this.setState({'suggestions': data})
+        )
+    }
+
+    handleSearch(value) {
+        // const [language] = this.state.direction;
+        // let cursor = store.trie[language];
+        //
+        // Array.prototype.forEach.call(value, char => (
+        //     cursor = cursor ? cursor[char] : null
+        // ));
+        //
+        // this.setState({
+        //     suggestions: uniq([
+        //         value,
+        //         ...suggestions(cursor, value),
+        //     ].map(
+        //         word => word.trim()
+        //     )),
+        //     keyword: value,
+        // });
+
+        this.doSearchRequest(value);
+    }
+
     render() {
         return (
             <Layout>
@@ -99,6 +136,8 @@ export default class SentenceSuggester extends Component {
                          selectSuggestion={this.selectSuggestion}
                          selectedSuggestion={this.state.selectedSuggestion}
                          suggestions={this.state.suggestions}
+
+                         onSearch={this.handleSearch}
 
                          caretCoordinates={this.state.caretCoordinates}
                          setCaretCoordinates={this.setCaretCoordinates}/>

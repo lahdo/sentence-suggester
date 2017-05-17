@@ -14,22 +14,28 @@ export default class Card extends Component {
 
         return (
             <div>
-                <div className='sentences-list'
-                     style={cardStyles}>
-                    <ul className='sentences'>
-                        {
-                            this.props.suggestions.map(function (suggestion, i) {
-                                return (
-                                    <li className="suggestion"
-                                                   onClick={() => this.props.selectSuggestion(suggestion)}
-                                                   key={i}>
-                                        {suggestion}
-                                    </li>
-                                );
-                            }, this)
-                        }
-                    </ul>
-                </div>
+                {
+                    this.props.suggestions.length ?
+                        <div className='sentences-list'
+                             style={cardStyles}>
+                            <ul className='sentences'>
+                                {
+                                    this.props.suggestions.map(function (suggestion, i) {
+                                        return (
+                                            <div>
+                                                <li className="suggestion"
+                                                    onClick={() => this.props.selectSuggestion(suggestion)}
+                                                    key={i}>
+                                                    {suggestion}
+                                                </li>
+                                                {/*<hr />*/}
+                                            </div>
+                                        );
+                                    }, this)
+                                }
+                            </ul>
+                        </div> : null
+                }
             </div>
         );
     }
