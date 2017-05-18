@@ -68,6 +68,11 @@ class Text(markovify.Text):
             else:
                 prefix = []
 
-            words = prefix + self.chain.walk(init_state)
+            predictions = self.chain.walk(init_state)
+
+            if(len(predictions)):
+                words = prefix + predictions
+            else:
+                words = []
 
             return self.word_join(words)

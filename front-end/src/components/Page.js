@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import * as SentenceParser from '../lib/SentenceParser';
 
 export default class Page extends Component {
     constructor(props) {
@@ -9,7 +10,7 @@ export default class Page extends Component {
         this.onClick = this.onClick.bind(this);
         this.onInput = this.onInput.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
-        this.handleKeyUp = this.handleKeyUp.bind(this);
+        this.onKeyUp = this.onKeyUp.bind(this);
         this.insertCaretIndicator = this.insertCaretIndicator.bind(this);
         this.insert = this.insert.bind(this);
         this.insertTextAtCursor = this.insertTextAtCursor.bind(this);
@@ -21,13 +22,6 @@ export default class Page extends Component {
     componentWillReceiveProps(nextProps, nextState) {
         if (this.props.selectedSuggestion !== nextProps.selectedSuggestion) {
             this.insertTextAtCursor(nextProps.selectedSuggestion);
-        }
-    }
-
-    handleKeyUp(event) {
-        const { value } = event.target;
-        if (value) {
-            this.props.onSearch(value);
         }
     }
 
@@ -44,8 +38,8 @@ export default class Page extends Component {
 
         offsets = document.getElementById('caretIndicator').getBoundingClientRect();
 
-        let offsetTop = 150;
-        let offsetLeft = offsets.left - ((window.innerWidth - this.refs.page.offsetWidth) / 2);
+        let offsetTop = 165;
+        let offsetLeft = offsets.left - ((window.innerWidth - this.refs.page.offsetWidth) / 2) + 15;
 
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         console.log('offsets.top: ', offsets.top);
@@ -178,12 +172,41 @@ export default class Page extends Component {
 
     onKeyDown(e) {
         this.handleChange(e);
+        // handleArrowKeys();
 
-        // const { value } = e.target;
-        // if (value) {
+    }
+
+    onKeyUp(e) {
+        this.handleChange(e);
+
         const range = window.getSelection().getRangeAt(0);
-        console.log("range: ", range.toString());
-        this.props.onSearch('the other');
+
+        // console.log(
+        //     "startContainer.nodeValue: ", range.startContainer.nodeValue +
+        //     ', startContainer.textContent: ' + range.startContainer.textContent +
+        //     ', startContainer.wholeText: ' + range.startContainer.wholeText
+        // );
+        // console.log(
+        //     "endContainer.nodeValue: ", range.endContainer.nodeValue +
+        //     ', endContainer.textContent: ' + range.endContainer.textContent +
+        //     ', endContainer.wholeText: ' + range.endContainer.wholeText
+        // );
+        //
+        // console.log(
+        //     "startOffset: ", range.startOffset +
+        //     ', endOffset: ' + range.endOffset +
+        //     ', collapsed: ' + range.collapsed
+        // );
+
+        const words = SentenceParser.getWords(
+            range.startContainer.textContent,
+            this.props.numberOfWords
+        );
+
+        this.props.onSearch(words);
+    }
+
+    handleArrowKeys(e) {
         // }
         // if (e.keyCode === 37) { // LEFT
         //     this.handleChange(e);
@@ -205,7 +228,7 @@ export default class Page extends Component {
         return (
             <div ref="page"
                  className="page"
-                 onKeyUp={ this.handleKeyUp }
+                 onKeyUp={ this.onKeyUp }
                  onKeyDown={ this.onKeyDown }
                  onClick={ this.onClick }
                  onInput={ this.onInput }

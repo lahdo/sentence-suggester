@@ -2,8 +2,11 @@ import json
 from suggester import Text
 
 
-def suggest(words, **kwargs):
-    return predict(" ".join(words))
+def suggest(words, numberOfWords=2, **kwargs):
+    if(len(words) < numberOfWords):
+        return []
+    else:
+        return predict(" ".join(words))
 
 def predict(beginning, **kwargs):
     with open('sherlock_corpus.json') as data_file:
@@ -14,6 +17,9 @@ def predict(beginning, **kwargs):
     predictions = []
 
     for i in range(5):
-        predictions.append(text_model.make_predictions(beginning))
+        prediction = text_model.make_predictions(beginning)
 
-    return predictions
+        if(prediction):
+            predictions.append(prediction)
+
+    return list(set(predictions)) # remove duplicates

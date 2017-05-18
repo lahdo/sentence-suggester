@@ -48,6 +48,7 @@ export default class Content extends Component {
                                   cachedSelection={this.props.cachedSelection}
                                   setCachedSelection={this.props.setCachedSelection}
                                   onSearch={this.props.onSearch}
+                                  numberOfWords={ this.props.numberOfWords }
                                   caretCoordinates={this.props.caretCoordinates}/>
                             {
                                 this.props.cardVisibility ?

@@ -22,10 +22,9 @@ export default class Card extends Component {
                                 {
                                     this.props.suggestions.map(function (suggestion, i) {
                                         return (
-                                            <div>
+                                            <div key={i}>
                                                 <li className="suggestion"
-                                                    onClick={() => this.props.selectSuggestion(suggestion)}
-                                                    key={i}>
+                                                    onClick={() => this.props.selectSuggestion(suggestion)}>
                                                     {suggestion}
                                                 </li>
                                                 {/*<hr />*/}

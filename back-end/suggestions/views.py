@@ -21,6 +21,7 @@ class SuggestionsViewSet(APIView):
         #data = json.loads(request.data)#request.POST["_content"])
 
         suggestions = suggester.suggest(request.data["words"])
+        # suggestions = suggester.suggest(["the", "other"])
 
         return Response(suggestions, status=status.HTTP_200_OK)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

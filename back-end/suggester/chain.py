@@ -4,28 +4,30 @@ import bisect
 from markovify.chain import BEGIN, END, accumulate
 import operator
 
+# NOT_IN_MODEL = "___NOT_IN_MODEL__"
+
 class Chain(markovify.chain.Chain):
-
-    def test(self):
-        """
-        Returns the underlying data as a Python dict.
-        """
-        print("Test")
-
     def move(self, state):
         """
         Given a state, choose the next item at random.
         """
+        cumdist = []
+        choices = []
+
         if state == tuple([ BEGIN ] * self.state_size):
             choices = self.begin_choices
             cumdist = self.begin_cumdist
         else:
-            choices, weights = zip(*self.model[state].items())
-            cumdist = list(accumulate(weights))
+            if state in self.model:
+                choices, weights = zip(*self.model[state].items())
+                cumdist = list(accumulate(weights))
         # selection = sorted(self.model[state].items(), key=operator.itemgetter(1),reverse=True)[0][0]
-        r = random.random() * cumdist[-1]
-        selection = choices[bisect.bisect(cumdist, r)]
-        return selection
+        if len(cumdist):
+            r = random.random() * cumdist[-1]
+            selection = choices[bisect.bisect(cumdist, r)]
+            return selection
+        else:
+            return END
 
     def gen(self, init_state=None):
         """
@@ -46,4 +48,5 @@ class Chain(markovify.chain.Chain):
         starting with a naive BEGIN state, or the provided `init_state`
         (as a tuple).
         """
+        # import pdb; pdb.set_trace()
         return list(self.gen(init_state))

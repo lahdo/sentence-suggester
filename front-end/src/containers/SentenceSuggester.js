@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {each} from 'lodash';
+import { debounce } from 'lodash';
 import fetch from 'isomorphic-fetch';
 
 import Layout from '../components/Layout.js';
@@ -31,7 +31,8 @@ export default class SentenceSuggester extends Component {
             firstCharCaretCoordinates: {},
             selectedStyle: this.styles[0],
             selectedSuggestion: '',
-            cardVisibility: false
+            cardVisibility: false,
+            numberOfWords: 2
         };
 
         this.setCaretCoordinates = this.setCaretCoordinates.bind(this);
@@ -40,8 +41,10 @@ export default class SentenceSuggester extends Component {
         this.setFirstCharCaretCoordinates = this.setFirstCharCaretCoordinates.bind(this);
         this.setCachedSelection = this.setCachedSelection.bind(this);
         this.selectStyle = this.selectStyle.bind(this);
-        this.doSearchRequest = this.doSearchRequest.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.doSearchRequest = debounce(this.doSearchRequest, 300, {
+            trailing: true
+        });
     }
 
     componentDidMount() {
@@ -75,7 +78,7 @@ export default class SentenceSuggester extends Component {
         this.setState({'cachedSelection': cachedSelection});
     }
 
-    doSearchRequest() {
+    doSearchRequest(searchObject) {
         const base = 'http://127.0.0.1:8000/api/v1/suggestions/';
 
         let myHeaders = new Headers();
@@ -83,7 +86,7 @@ export default class SentenceSuggester extends Component {
 
         fetch(`${base}`, {
                 method: 'POST',
-                body: JSON.stringify({ words: ['the', 'other']}),//this.state.words
+                body: JSON.stringify(searchObject),//this.state.words
                 headers: myHeaders
             }
         ).then(
@@ -93,54 +96,42 @@ export default class SentenceSuggester extends Component {
         )
     }
 
-    handleSearch(value) {
-        // const [language] = this.state.direction;
-        // let cursor = store.trie[language];
-        //
-        // Array.prototype.forEach.call(value, char => (
-        //     cursor = cursor ? cursor[char] : null
-        // ));
-        //
-        // this.setState({
-        //     suggestions: uniq([
-        //         value,
-        //         ...suggestions(cursor, value),
-        //     ].map(
-        //         word => word.trim()
-        //     )),
-        //     keyword: value,
-        // });
+    handleSearch(arrayOfWords) {
+        const searchObject = {
+            words: arrayOfWords
+        };
 
-        this.doSearchRequest(value);
+        this.doSearchRequest(searchObject);
     }
 
     render() {
         return (
             <Layout>
                 <NavigationBar />
-                <Content styles={this.state.styles}
-                         selectedStyle={this.state.selectedStyle}
-                         selectStyle={this.selectStyle}
+                <Content styles={ this.state.styles }
+                         selectedStyle={ this.state.selectedStyle }
+                         selectStyle={ this.selectStyle }
 
-                         firstCharCaretCoordinates={this.state.firstCharCaretCoordinates}
-                         setFirstCharCaretCoordinates={this.setFirstCharCaretCoordinates}
+                         firstCharCaretCoordinates={ this.state.firstCharCaretCoordinates }
+                         setFirstCharCaretCoordinates={ this.setFirstCharCaretCoordinates }
 
-                         cachedSelection={this.state.cachedSelection}
-                         setCachedSelection={this.setCachedSelection}
+                         cachedSelection={ this.state.cachedSelection }
+                         setCachedSelection={ this.setCachedSelection }
 
-                         cardVisibility={this.state.cardVisibility}
-                         setCardVisibility={this.setCardVisibility}
+                         cardVisibility={ this.state.cardVisibility }
+                         setCardVisibility={ this.setCardVisibility }
 
-                         cardStyles={this.state.caretCoordinates}
+                         cardStyles={ this.state.caretCoordinates }
 
-                         selectSuggestion={this.selectSuggestion}
-                         selectedSuggestion={this.state.selectedSuggestion}
-                         suggestions={this.state.suggestions}
+                         selectSuggestion={ this.selectSuggestion }
+                         selectedSuggestion={ this.state.selectedSuggestion }
+                         suggestions={ this.state.suggestions }
 
-                         onSearch={this.handleSearch}
+                         onSearch={ this.handleSearch }
+                         numberOfWords={ this.state.numberOfWords }
 
-                         caretCoordinates={this.state.caretCoordinates}
-                         setCaretCoordinates={this.setCaretCoordinates}/>
+                         caretCoordinates={ this.state.caretCoordinates }
+                         setCaretCoordinates={ this.setCaretCoordinates }/>
                 <Footer />
             </Layout>
         );

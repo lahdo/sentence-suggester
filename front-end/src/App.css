@@ -61,7 +61,7 @@ nav.nav-bar .navbar-brand {
 .sentences-list {
     position: absolute;
     border: 1px solid #d8d0d0;
-    width: 350px;
+    width: 550px;
     /*background: #F9F9F9;*/
     background: #FFFFFF;
     box-shadow: 3px 3px 2px #E9E9E9;
@@ -114,5 +114,5 @@ nav.nav-bar .navbar-brand {
 }
 
 #caretIndicator {
-
+    display: inline-block;
 }
