@@ -96,9 +96,10 @@ export default class SentenceSuggester extends Component {
         )
     }
 
-    handleSearch(arrayOfWords) {
+    handleSearch(arrayOfWords, jargon='default') {
         const searchObject = {
-            words: arrayOfWords
+            words: arrayOfWords,
+            jargon: jargon
         };
 
         this.doSearchRequest(searchObject);

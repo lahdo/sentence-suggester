@@ -9,7 +9,7 @@ def suggest(words, numberOfWords=2, **kwargs):
         return predict(" ".join(words))
 
 def predict(beginning, **kwargs):
-    with open('sherlock_corpus.json') as data_file:
+    with open('./models/sherlock_corpus.json') as data_file:
         model_json = json.load(data_file)
 
     text_model = Text.from_json(model_json)
