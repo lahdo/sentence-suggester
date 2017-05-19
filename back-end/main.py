@@ -78,17 +78,14 @@ def handle_csv():
     reader = csv.reader(csvfile, delimiter=',')
 
     for row in reader:
-        # print(row[1])
-        # print(row[2])
-        print(row[1], file=jsonfile)
-        print(row[2], file=jsonfile)
+        print(row[1])
+        print(row[2])
+#         print(row[1], file=jsonfile)
+#         print(row[2], file=jsonfile)
 
-        # json.dump(row, jsonfile)
-        # jsonfile.write('\n')
-# ...     spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-# ...     for row in spamreader:
-# ...         print(', '.join(row))
-
+def prepare_books_models():
+    for i in range(20):
+        prepare_model("./models/books/%s.txt" % str(i+1), "./models/book_models/%s.json" % str(i+1))
 
 def convert_csv():
     import json
@@ -117,7 +114,8 @@ def convert_csv():
 
 # smoke_test()
 # prepare_model("./models/raw/sherlock.txt", "./models/sherlock_corpus.json")
-prepare_model("./models/news3.txt", "./models/news_corpus.json")
+# prepare_model("./models/news3.txt", "./models/news_corpus.json")
+prepare_books_models()
 # prepare_clean_json()
 # smoke_test_ready_model()
 # suggest('the other', max_overlap_ratio=100, max_overlap_total=100, test_output=False)

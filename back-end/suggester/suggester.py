@@ -9,10 +9,7 @@ def suggest(words, numberOfWords=2, **kwargs):
         return predict(" ".join(words))
 
 def predict(beginning, **kwargs):
-    with open('./models/sherlock_corpus.json') as data_file:
-        model_json = json.load(data_file)
-
-    text_model = Text.from_json(model_json)
+    text_model = get_default_model()
 
     predictions = []
 
@@ -23,3 +20,18 @@ def predict(beginning, **kwargs):
             predictions.append(prediction)
 
     return list(set(predictions)) # remove duplicates
+
+def get_books_models()
+    with open('./models/sherlock_corpus.json') as data_file:
+        model_json = json.load(data_file)
+
+    return Text.from_json(model_json)
+
+def get_default_model()
+    models = []
+
+    for i in range(20):
+        with open('./models/book_models/%s.json' % str(i+1)) as data_file:
+            models.append(Text.from_json(json.load(data_file)))
+
+    return markovify.combine(models)
