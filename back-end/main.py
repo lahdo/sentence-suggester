@@ -24,7 +24,7 @@ def prepare_model(raw_text, output_file):
         text = f.read()
 
     # Build the model.
-    text_model = markovify.Text(text, state_size=2)
+    text_model = markovify.Text(text, state_sizge=2)
 
     model_json = text_model.to_json()
 
@@ -87,6 +87,9 @@ def prepare_books_models():
     for i in range(20):
         prepare_model("./models/books/%s.txt" % str(i+1), "./models/book_models/%s.json" % str(i+1))
 
+def prepare_wiki_model():
+    prepare_model("./models/wiki/wikipedia_partial.txt", "./models/wiki_models/wikipedia_partial.json")
+
 def convert_csv():
     import json
 
@@ -115,7 +118,8 @@ def convert_csv():
 # smoke_test()
 # prepare_model("./models/raw/sherlock.txt", "./models/sherlock_corpus.json")
 # prepare_model("./models/news3.txt", "./models/news_corpus.json")
-prepare_books_models()
+# prepare_books_models()
+prepare_wiki_model()
 # prepare_clean_json()
 # smoke_test_ready_model()
 # suggest('the other', max_overlap_ratio=100, max_overlap_total=100, test_output=False)
