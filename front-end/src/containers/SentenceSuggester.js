@@ -113,9 +113,11 @@ export default class SentenceSuggester extends Component {
     }
 
     handleSearch(arrayOfWords, jargon = 'default') {
+        const selectedJargon = jargon !== 'default' ? jargon : this.state.selectedJargon;
+
         const searchObject = {
             words: arrayOfWords,
-            jargon: jargon
+            jargon: selectedJargon
         };
 
         this.doSearchRequest(searchObject);

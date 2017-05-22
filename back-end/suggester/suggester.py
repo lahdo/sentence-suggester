@@ -7,10 +7,13 @@ def suggest(query, numberOfWords=2, **kwargs):
     if(len(query['words']) < numberOfWords):
         return []
     else:
-        return predict(" ".join(query['words']))
+        return predict(query)
 
-def predict(beginning, **kwargs):
-    text_model = get_default_model()
+def predict(query, **kwargs):
+    beginning = " ".join(query['words'])
+    jargon = query['jargon']
+
+    text_model = get_model(jargon)
 
     predictions = []
 
@@ -23,7 +26,21 @@ def predict(beginning, **kwargs):
     return list(set(predictions)) # remove duplicates
 
 def get_default_model():
-    return DEFAULT_MODEL['model']()
+    return DEFAULT_MODEL['model']
+
+def get_model(jargon):
+    selected_model = get_default_model()
+
+    try:
+        if(jargon == 'default'):
+            return selected_model()
+        else:
+            for model in MODELS:
+                if(MODELS[model]['name'] == jargon):
+                    selected_model = MODELS[model]['model']
+            return selected_model()
+    except ValueError:
+        return selected_model()
 
 def get_books_models():
     models = []
