@@ -17,6 +17,7 @@ export default class Page extends Component {
         this.removeCaretIndicator = this.removeCaretIndicator.bind(this);
         this.getCaretRelativePosition = this.getCaretRelativePosition.bind(this);
         this.getCurrentSelection = this.getCurrentSelection.bind(this);
+        this.getWordsAndSearch = this.getWordsAndSearch.bind(this);
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -157,6 +158,7 @@ export default class Page extends Component {
         let caretCoordinates = this.getCaretCoordinates();
         this.props.setCaretCoordinates(caretCoordinates);
         this.props.setCachedSelection(this.getCurrentSelection());
+        this.getWordsAndSearch();
     }
 
     onClick(e) {
@@ -178,8 +180,16 @@ export default class Page extends Component {
 
     onKeyUp(e) {
         this.handleChange(e);
+    }
 
+    getWordsAndSearch() {
         const range = window.getSelection().getRangeAt(0);
+        const words = SentenceParser.getWords(
+            range.startContainer.textContent,
+            this.props.numberOfWords
+        );
+
+        this.props.onSearch(words);
 
         // console.log(
         //     "startContainer.nodeValue: ", range.startContainer.nodeValue +
@@ -197,13 +207,6 @@ export default class Page extends Component {
         //     ', endOffset: ' + range.endOffset +
         //     ', collapsed: ' + range.collapsed
         // );
-
-        const words = SentenceParser.getWords(
-            range.startContainer.textContent,
-            this.props.numberOfWords
-        );
-
-        this.props.onSearch(words);
     }
 
     handleArrowKeys(e) {
