@@ -8,7 +8,7 @@ export default class StyleSelector extends Component {
             <div className="styleSelector">
                 <DropdownButton id="styleSelector" title="Select Jargon">
                     {
-                        this.props.styles.map(function (style, i) {
+                        this.props.jargons.map(function (style, i) {
                             return (
                                 <MenuItem
                                     onClick={() => this.props.selectStyle(style)}
@@ -20,7 +20,7 @@ export default class StyleSelector extends Component {
                     }
                 </DropdownButton>
                 <span className="currentStyleHeader">Current: </span>
-                <strong>{this.props.selectedStyle}</strong>
+                <strong>{this.props.selectedJargon}</strong>
             </div>
         );
     }

@@ -20,8 +20,36 @@ class SuggestionsViewSet(APIView):
     def post(self, request, *args, **kwargs):
         #data = json.loads(request.data)#request.POST["_content"])
 
-        suggestions = suggester.suggest(request.data["words"])
+        query = {
+            'words': request.data["words"] if request.data["words"] else [],
+            'jargon': request.data["jargon"] if request.data["jargon"] else 'default'
+        }
+
+        suggestions = suggester.suggest(query)
         # suggestions = suggester.suggest(["the", "other"])
 
         return Response(suggestions, status=status.HTTP_200_OK)
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class JargonsViewSet(APIView):
+    permission_classes = []
+
+    def get(self, request, *args, **kwargs):
+        models = []
+
+        for model in suggester.MODELS:
+            models.append(suggester.MODELS[model]['name'])
+
+        response = {
+            'models': models
+        }
+
+        return Response(response, status=status.HTTP_200_OK)
+
+class DefaultJargonViewSet(APIView):
+    permission_classes = []
+
+    def get(self, request, *args, **kwargs):
+        default_model = suggester.DEFAULT_MODEL['name']
+
+        return Response(default_model, status=status.HTTP_200_OK)

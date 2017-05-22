@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import { debounce } from 'lodash';
-import fetch from 'isomorphic-fetch';
+import {debounce} from 'lodash';
 
 import Layout from '../components/Layout.js';
 import NavigationBar from '../components/NavigationBar.js';
 import Content from '../components/Content.js';
 import Footer from '../components/Footer.js';
+
+import * as api from '../utils/api.js'
 
 import '../App.css';
 
@@ -13,7 +14,7 @@ export default class SentenceSuggester extends Component {
     constructor(props) {
         super(props);
 
-        this.styles = [
+        this.jargons = [
             'IT',
             'Lovers',
             'Formal',
@@ -26,10 +27,10 @@ export default class SentenceSuggester extends Component {
                 left: 0
             },
             suggestions: [],
-            styles: this.styles,
+            jargons: this.jargons,
             cachedSelection: {},
             firstCharCaretCoordinates: {},
-            selectedStyle: this.styles[0],
+            selectedJargon: this.jargons[0],
             selectedSuggestion: '',
             cardVisibility: false,
             numberOfWords: 2
@@ -42,12 +43,15 @@ export default class SentenceSuggester extends Component {
         this.setCachedSelection = this.setCachedSelection.bind(this);
         this.selectStyle = this.selectStyle.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.getJargons = this.getJargons.bind(this);
         this.doSearchRequest = debounce(this.doSearchRequest, 300, {
             trailing: true
         });
     }
 
     componentDidMount() {
+        this.getJargons();
+        this.getDefaultJargon();
     }
 
     componentDidUpdate() {
@@ -67,7 +71,7 @@ export default class SentenceSuggester extends Component {
     }
 
     selectStyle(selectedStyle) {
-        this.setState({'selectedStyle': selectedStyle});
+        this.setState({"selectedJargon": selectedStyle});
     }
 
     setFirstCharCaretCoordinates(firstCharCaretCoordinates) {
@@ -79,24 +83,36 @@ export default class SentenceSuggester extends Component {
     }
 
     doSearchRequest(searchObject) {
-        const base = 'http://127.0.0.1:8000/api/v1/suggestions/';
-
-        let myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        fetch(`${base}`, {
-                method: 'POST',
-                body: JSON.stringify(searchObject),//this.state.words
-                headers: myHeaders
-            }
-        ).then(
+        api.getSuggestions(searchObject).then(
             response => response.json()
         ).then(
-            data => this.setState({'suggestions': data})
-        )
+            suggestions => {
+                this.setState({'suggestions': suggestions})
+            }
+        );
     }
 
-    handleSearch(arrayOfWords, jargon='default') {
+    getJargons() {
+        api.getJargons().then(
+            response => response.json()
+        ).then(
+            jargons => {
+                this.setState({'jargons': jargons.models})
+            }
+        );
+    }
+
+    getDefaultJargon() {
+        api.getDefaultJargon().then(
+            response => response.json()
+        ).then(
+            defaultJargon => {
+                this.setState({'selectedJargon': defaultJargon})
+            }
+        );
+    }
+
+    handleSearch(arrayOfWords, jargon = 'default') {
         const searchObject = {
             words: arrayOfWords,
             jargon: jargon
@@ -109,8 +125,8 @@ export default class SentenceSuggester extends Component {
         return (
             <Layout>
                 <NavigationBar />
-                <Content styles={ this.state.styles }
-                         selectedStyle={ this.state.selectedStyle }
+                <Content jargons={ this.state.jargons }
+                         selectedJargon={ this.state.selectedJargon }
                          selectStyle={ this.selectStyle }
 
                          firstCharCaretCoordinates={ this.state.firstCharCaretCoordinates }

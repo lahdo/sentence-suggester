@@ -19,12 +19,16 @@ from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
 
 from suggestions.views import SuggestionsViewSet
+from suggestions.views import JargonsViewSet
+from suggestions.views import DefaultJargonViewSet
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 
 urlpatterns = [
     url(r'^api/v1/suggestions', SuggestionsViewSet.as_view()),
+    url(r'^api/v1/jargons/default', DefaultJargonViewSet.as_view()),
+    url(r'^api/v1/jargons', JargonsViewSet.as_view()),
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
