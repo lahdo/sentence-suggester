@@ -14,12 +14,7 @@ export default class SentenceSuggester extends Component {
     constructor(props) {
         super(props);
 
-        this.jargons = [
-            'IT',
-            'Lovers',
-            'Formal',
-            'Trump-like'
-        ];
+        this.jargons = [];
 
         this.state = {
             caretCoordinates: {
@@ -30,7 +25,7 @@ export default class SentenceSuggester extends Component {
             jargons: this.jargons,
             cachedSelection: {},
             firstCharCaretCoordinates: {},
-            selectedJargon: this.jargons[0],
+            selectedJargon: '',
             selectedSuggestion: '',
             cardVisibility: false,
             numberOfWords: 2

@@ -90,4 +90,4 @@ MODELS = {
     },
 }
 
-DEFAULT_MODEL = MODELS['books']
+DEFAULT_MODEL = MODELS['sherlock']
