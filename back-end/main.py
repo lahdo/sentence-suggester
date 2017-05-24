@@ -1,6 +1,8 @@
 import markovify
 import json
 from suggester import Text
+import redis
+
 
 def smoke_test():
     # Get raw text as string.
@@ -24,7 +26,7 @@ def prepare_model(raw_text, output_file):
         text = f.read()
 
     # Build the model.
-    text_model = markovify.Text(text, state_sizge=2)
+    text_model = markovify.Text(text, state_size=2)
 
     model_json = text_model.to_json()
 
@@ -100,28 +102,21 @@ def convert_csv():
         print(model["last_crawl_date"])
         print(model["title"])
 
-    # with open('./models/raw/news.txt', 'w') as text_file:
-    #     for item in model:
-    #         print(model["last_crawl_date"])
-    #         print(model["title"])
-    #
-    #     text_file.write("Purchase Amount: %s" % TotalAmount)
+def redis_test():
+    r = redis.StrictRedis(host='localhost', port=6379, db=0)
+    r.set('foo', 'bar')
+    print(r.get('foo'))
 
-
-
-    # fieldnames = ("body","title","last_crawl_date","id")
-    # reader = csv.DictReader(csvfile, fieldnames)
-    # for row in reader:
-    #     json.dump(row, jsonfile)
-    #     jsonfile.write('\n')
 
 # smoke_test()
 # prepare_model("./models/raw/sherlock.txt", "./models/sherlock_corpus.json")
 # prepare_model("./models/news3.txt", "./models/news_corpus.json")
 # prepare_books_models()
-prepare_wiki_model()
+# prepare_wiki_model()
 # prepare_clean_json()
 # smoke_test_ready_model()
 # suggest('the other', max_overlap_ratio=100, max_overlap_total=100, test_output=False)
 # handle_csv()
 # convert_csv()
+
+redis_test()
