@@ -1,6 +1,6 @@
 import markovify
 import json
-from suggester import Text
+from suggester import Text, CorpusBuilder
 import redis
 
 
@@ -89,6 +89,10 @@ def prepare_books_models():
     for i in range(20):
         prepare_model("./models/books/%s.txt" % str(i+1), "./models/book_models/%s.json" % str(i+1))
 
+def prepare_books_redis_models():
+    for i in range(20):
+        prepare_redis_model("./models/books/%s.txt" % str(i+1), "books")
+
 def prepare_wiki_model():
     prepare_model("./models/wiki/wikipedia_partial.txt", "./models/wiki_models/wikipedia_partial.json")
 
@@ -107,6 +111,18 @@ def redis_test():
     r.set('foo', 'bar')
     print(r.get('foo'))
 
+def prepare_redis_model(raw_text, model_name, state_size=2):
+    # Get raw text as string.
+    with open(raw_text) as f:
+        text = f.read()
+
+    # Build the model.
+    text_model = markovify.Text(text, state_size=2)
+
+    corpus = CorpusBuilder(text_model=text_model, model_name=model_name, state_size=2)
+    corpus.build()
+
+
 
 # smoke_test()
 # prepare_model("./models/raw/sherlock.txt", "./models/sherlock_corpus.json")
@@ -119,4 +135,6 @@ def redis_test():
 # handle_csv()
 # convert_csv()
 
-redis_test()
+# redis_test()
+prepare_redis_model('./models/news3.txt', "news")
+# prepare_books_redis_models()

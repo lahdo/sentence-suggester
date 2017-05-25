@@ -6,11 +6,23 @@ from markovify.text import DEFAULT_MAX_OVERLAP_RATIO, DEFAULT_MAX_OVERLAP_TOTAL,
 
 class Text(markovify.Text):
 
-    def test(self):
+    def __init__(self, input_text, state_size=2, chain=None, parsed_sentences=None, redis=False):
         """
-        Returns the underlying data as a Python dict.
+        input_text: A string.
+        state_size: An integer, indicating the number of words in the model's state.
+        chain: A trained markovify.Chain instance for this text, if pre-processed.
+        parsed_sentences: A list of lists, where each outer list is a "run"
+              of the process (e.g. a single sentence), and each inner list
+              contains the steps (e.g. words) in the run. If you want to simulate
+              an infinite process, you can come very close by passing just one, very
+              long run.
         """
-        print("Test")
+        self.state_size = state_size
+        self.parsed_sentences = parsed_sentences or list(self.generate_corpus(input_text))
+
+        # Rejoined text lets us assess the novelty of generated sentences
+        self.rejoined_text = self.sentence_join(map(self.word_join, self.parsed_sentences))
+        self.chain = chain or Chain(self.parsed_sentences, state_size)
 
     @classmethod
     def from_dict(cls, obj):
