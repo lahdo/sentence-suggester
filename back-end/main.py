@@ -136,5 +136,5 @@ def prepare_redis_model(raw_text, model_name, state_size=2):
 # convert_csv()
 
 # redis_test()
-prepare_redis_model('./models/news3.txt', "news")
+prepare_redis_model('./models/news/news.txt', "news")
 # prepare_books_redis_models()

@@ -2,13 +2,17 @@
 
 # dependencies
 /node_modules
+front-end/node_modules
+
 .idea
 
 # testing
 /coverage
+front-end/coverage
 
 # production
 /build
+front-end/build
 
 # misc
 .DS_Store
@@ -18,3 +22,4 @@ yarn-debug.log*
 yarn-error.log*
 
 back-end/env
+back-end/env3
