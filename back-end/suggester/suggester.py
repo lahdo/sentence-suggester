@@ -60,6 +60,10 @@ MODELS = {
         'name': 'Books',
         'key': 'books',
     },
+    'rapacz': {
+        'name': 'Marcin Rapacz',
+        'key': 'rapacz',
+    },
 }
 
 DEFAULT_MODEL = MODELS['sherlock']

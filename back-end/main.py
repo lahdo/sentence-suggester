@@ -122,6 +122,17 @@ def prepare_redis_model(raw_text, model_name, state_size=2):
     corpus = CorpusBuilder(text_model=text_model, model_name=model_name, state_size=2)
     corpus.build()
 
+def prepare_redis_model_from_source(json_model, model_name, state_size=2):
+    with open(json_model) as data_file:
+        model_json = data_file.read().replace("\\", r"\\") #  json.load(data_file)
+
+    # text_model = markovify.Text.from_json(model_json)
+
+    text_model = Text.from_json(model_json)
+
+    corpus = CorpusBuilder(text_model=text_model, model_name=model_name, state_size=2)
+    corpus.build()
+
 
 
 # smoke_test()
@@ -136,5 +147,6 @@ def prepare_redis_model(raw_text, model_name, state_size=2):
 # convert_csv()
 
 # redis_test()
-prepare_redis_model('./models/news/news.txt', "news")
+prepare_redis_model('./models/marcin_rapacz.txt', "rapacz")
+# prepare_redis_model_from_source('./models/news.json', "news")
 # prepare_books_redis_models()

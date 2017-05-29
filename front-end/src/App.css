@@ -1,3 +1,28 @@
+/*@font-face {*/
+    /*font-family: "Computer Modern";*/
+    /*src: local('Computer Modern'), url('../public/fonts/cmunss.otf') format('opentype');*/
+/*}*/
+/*@font-face {*/
+    /*font-family: "Computer Modern";*/
+    /*src: local('Computer Modern'), url('../public/fonts/cmunsx.otf') format('opentype');*/
+    /*font-weight: bold;*/
+/*}*/
+/*@font-face {*/
+    /*font-family: "Computer Modern";*/
+    /*src: local('Computer Modern'), url('../public/fonts/cmunsi.otf') format('opentype');*/
+    /*font-style: italic, oblique;*/
+/*}*/
+/*@font-face {*/
+    /*font-family: "Computer Modern";*/
+    /*src: local('Computer Modern'), url('../public/fonts/cmunbxo.otf') format('opentype');*/
+    /*font-weight: bold;*/
+    /*font-style: italic, oblique;*/
+/*}*/
+
+body {
+    /*font-family: "Computer Modern", serif;*/
+}
+
 .App {
     text-align: center;
 }
@@ -47,10 +72,11 @@ nav.nav-bar .navbar-brand {
     margin: 7px auto;
     margin-bottom: 0.5cm;
     box-shadow: 1px 2px 3px #ddd;
-    font-size: 24px;
+    font-size: 28px;
     outline: none;
     border: 2px solid #d8d0d0;
     border-radius: 1px;
+    /*font-family: "Computer Modern Serif", serif;*/
 }
 
 .container {

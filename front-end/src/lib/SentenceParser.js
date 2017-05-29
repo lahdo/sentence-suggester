@@ -1,5 +1,3 @@
-
-
 export function getWords(sentence, limit=2) {
     const separator = ' ';
     const arrayOfWords = sentence.split(separator);

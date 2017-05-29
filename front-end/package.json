@@ -2,6 +2,7 @@
   "name": "sentence-suggester",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://lahdo.github.io/sentence-suggester",
   "dependencies": {
     "bootstrap": "^3.3.7",
     "isomorphic-fetch": "^2.2.1",
