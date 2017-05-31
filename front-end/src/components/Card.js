@@ -17,7 +17,7 @@ export default class Card extends Component {
     }
 
     isFocused(row, column) {
-        if(this.props.cardSelections.selections.length) {
+        if (this.props.cardSelections.selections.length) {
             return this.props.cardSelections.selections[row][column];
         }
         else {
@@ -28,8 +28,8 @@ export default class Card extends Component {
     renderWords(word, row, column) {
         return (
             <div key={column} className="word">
-              <span
-                  className={this.isFocused(row, column) ? 'selection single-word' : 'single-word'}>
+              <span onClick={() => this.props.selectSuggestion(row, column)}
+                    className={this.isFocused(row, column) ? 'selection single-word' : 'single-word'}>
                   {word}
              </span>
             </div>
@@ -39,8 +39,7 @@ export default class Card extends Component {
     renderSentences(suggestion, row) {
         return (
             <div key={row}>
-                <li className="suggestion"
-                    onClick={() => this.props.selectSuggestion(suggestion)}>
+                <li className="suggestion">
                     {
                         suggestion.map(
                             (word, column) => this.renderWords(word, row, column)

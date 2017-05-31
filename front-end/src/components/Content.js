@@ -27,6 +27,18 @@ export default class Content extends Component {
         this.getCurrentSelection = this.getCurrentSelection.bind(this);
         this.getWordsAndSearch = this.getWordsAndSearch.bind(this);
         this.normalizeCardCursor = this.normalizeCardCursor.bind(this);
+        this.moveAndNormalizeCardCursor = this.moveAndNormalizeCardCursor.bind(this);
+        this.isCardFocused = this.isCardFocused.bind(this);
+        this.resetSelectionArray = this.resetSelectionArray.bind(this);
+
+        this.processKeyUp = this.processKeyUp.bind(this);
+        this.processKeyDown = this.processKeyDown.bind(this);
+        this.processKeyLeft = this.processKeyLeft.bind(this);
+        this.processKeyRight = this.processKeyRight.bind(this);
+        this.processKeyEnter = this.processKeyEnter.bind(this);
+        this.processCardSelections = this.processCardSelections.bind(this);
+
+        this.getSelectedWords = this.getSelectedWords.bind(this);
     }
 
     componentDidMount() {
@@ -34,7 +46,7 @@ export default class Content extends Component {
 
     moveCardCursor(increaseRow, increaseColumn) {
         let row = 0;
-        let column = 0;
+        let column = this.props.cardSelections.selections[row].length - 1;
 
         if (this.props.cardSelections.cursorPosition.length) {
             row = this.props.cardSelections.cursorPosition[0] + increaseRow;
@@ -44,7 +56,12 @@ export default class Content extends Component {
             column = this.props.cardSelections.cursorPosition[1] + increaseColumn;
         }
 
-        return this.normalizeCardCursor(row, column);
+        return [row, column];
+    }
+
+    moveAndNormalizeCardCursor(increaseRow, increaseColumn) {
+        let cursorPosition = this.moveCardCursor(increaseRow, increaseColumn);
+        return this.normalizeCardCursor(cursorPosition[0], cursorPosition[1]);
     }
 
     normalizeCardCursor(row, column) {
@@ -61,58 +78,124 @@ export default class Content extends Component {
         return [row, column]
     }
 
-    recalculateCardSelections(cursorPosition) {
-        // Zeros the array
-        let selections = this.props.cardSelections.selections.map(
+    resetSelectionArray(selections) {
+        return selections.map(
             (row) => {
                 return row.map(() => {
                     return false;
                 })
             });
+    }
 
-        selections[cursorPosition[0]] = selections[cursorPosition[0]].map((_, index) => {
-            if (index <= cursorPosition[1]) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        });
+    recalculateCardSelections(cursorPosition) {
+        let selections = this.resetSelectionArray(this.props.cardSelections.selections);
+
+        if (cursorPosition[0] > -1) {
+            selections[cursorPosition[0]] = selections[cursorPosition[0]].map((_, index) => {
+                return (index <= cursorPosition[1]);
+            });
+        }
 
         return selections;
     }
 
-    onKeyDown(e) {
+    processKeyUp(e, cursorPosition, cardFocus) {
+        cursorPosition = this.moveCardCursor(-1, 0);
+        cardFocus = this.isCardFocused(cursorPosition);
+        if (cardFocus) {
+            cursorPosition = this.normalizeCardCursor(cursorPosition[0], cursorPosition[1]);
+            e.preventDefault();
+        }
+        if (cursorPosition[0] === -1) { // When card in not focused for the first time, prevent moving the caret
+            e.preventDefault();
+        }
+        return [cursorPosition, cardFocus];
+    }
+
+    processKeyDown(e, cursorPosition, cardFocus) {
+        cursorPosition = this.moveCardCursor(1, 0);
+        cardFocus = this.isCardFocused(cursorPosition);
+        if (cardFocus) {
+            cursorPosition = this.normalizeCardCursor(cursorPosition[0], cursorPosition[1]);
+            e.preventDefault();
+        }
+        return [cursorPosition, cardFocus];
+    }
+
+    processKeyLeft(e, cursorPosition, cardFocus) {
+        cursorPosition = this.moveAndNormalizeCardCursor(0, -1);
+        cardFocus = true;
+        e.preventDefault();
+
+        return [cursorPosition, cardFocus];
+    }
+
+    processKeyRight(e, cursorPosition, cardFocus) {
+        cursorPosition = this.moveAndNormalizeCardCursor(0, 1);
+        cardFocus = true;
+        e.preventDefault();
+
+        return [cursorPosition, cardFocus];
+    }
+
+    processKeyEnter(e) {
         let cursorPosition = this.props.cardSelections.cursorPosition;
-        let selections = this.props.cardSelections.selections;
+        this.props.selectSuggestion(cursorPosition[0], cursorPosition[1]);
+        let cardFocus = true;
+        e.preventDefault();
 
-        if (e.keyCode === 37) { // LEFT
-            cursorPosition = this.moveCardCursor(0, -1);
-            selections = this.recalculateCardSelections(cursorPosition);
-            console.log('LEFT');
+        return cardFocus;
+    }
+
+    processCardSelections(updated, cursorPosition, cardFocus) {
+        if (updated) {
+            let selections = this.recalculateCardSelections(cursorPosition);
+
+            this.props.setCardSelections({
+                cursorPosition: cursorPosition,
+                selections: selections,
+                focused: cardFocus
+            });
         }
-        if (e.keyCode === 39) { // RIGHT
-            cursorPosition = this.moveCardCursor(0, 1);
-            selections = this.recalculateCardSelections(cursorPosition);
-            console.log('RIGHT');
-        }
+    }
+
+    onKeyDown(e) {
+        let cursorPosition = false;
+        let cardFocus = false;
+        let updated = false;
+
+        let canNavigateInCard = this.props.cardSelections.focused && this.props.cardVisibility;
+
         if (e.keyCode === 38) { // UP
-            cursorPosition = this.moveCardCursor(-1, 0);
-            selections = this.recalculateCardSelections(cursorPosition);
-            // e.stopPropagation();
-            console.log('UP');
+            [cursorPosition, cardFocus] = this.processKeyUp(e, cursorPosition, cardFocus);
+            updated = true;
         }
-        if (e.keyCode === 40) { // DOWN
-            cursorPosition = this.moveCardCursor(1, 0);
-            selections = this.recalculateCardSelections(cursorPosition);
-            // e.stopPropagation();
-            console.log('DOWN');
+        else if (e.keyCode === 40) { // DOWN
+            [cursorPosition, cardFocus] = this.processKeyDown(e, cursorPosition, cardFocus);
+            updated = true;
         }
 
-        this.props.setCardSelections({
-            cursorPosition: cursorPosition,
-            selections: selections
-        });
+        if (canNavigateInCard) {
+            if (e.keyCode === 37) { // LEFT
+                [cursorPosition, cardFocus] = this.processKeyLeft(e, cursorPosition, cardFocus);
+                updated = true;
+            }
+            else if (e.keyCode === 39) { // RIGHT
+                [cursorPosition, cardFocus] = this.processKeyRight(e, cursorPosition, cardFocus);
+                updated = true;
+            }
+            else if (e.keyCode === 13) { // ENTER
+                cardFocus = this.processKeyEnter(e);
+                updated = true;
+            }
+        }
+
+        this.processCardSelections(updated, cursorPosition, cardFocus);
+    }
+
+    isCardFocused(cursorPosition) {
+        let row = cursorPosition[0];
+        return !(row < 0);
     }
 
     handleChange(e) {
@@ -149,12 +232,6 @@ export default class Content extends Component {
         // );
     }
 
-    // onKeyDown(e) {
-    //     this.handleChange(e);
-    //     // handleArrowKeys();
-    //
-    // }
-
     onKeyUp(e) {
         ///this.handleChange(e);
     }
@@ -166,8 +243,22 @@ export default class Content extends Component {
 
     componentWillReceiveProps(nextProps, nextState) {
         if (this.props.selectedSuggestion !== nextProps.selectedSuggestion) {
-            this.insertTextAtCursor(nextProps.selectedSuggestion);
+
+            let words = this.getSelectedWords(nextProps.selectedSuggestion[0], nextProps.selectedSuggestion[1]);
+            this.insertTextAtCursor(' ' + words.join(' '));
         }
+    }
+
+    getSelectedWords(row, column) {
+        let words = [];
+
+        this.props.suggestions[row].forEach((word, index) => {
+            if(index <= column) {
+                words.push(word);
+            }
+        });
+
+        return words;
     }
 
     getCaretCoordinates() {
@@ -184,7 +275,7 @@ export default class Content extends Component {
         offsets = document.getElementById('caretIndicator').getBoundingClientRect();
 
         let offsetTop = 165;
-        let offsetLeft = offsets.left - ((window.innerWidth -  ReactDOM.findDOMNode(this.refs.page).offsetWidth) / 2) + 15;
+        let offsetLeft = offsets.left - ((window.innerWidth - ReactDOM.findDOMNode(this.refs.page).offsetWidth) / 2) + 15;
 
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         console.log('offsets.top: ', offsets.top);
@@ -211,13 +302,13 @@ export default class Content extends Component {
             sel = window.getSelection();
             if (sel.rangeCount) {
                 range = sel.getRangeAt(0);
-                if (range.commonAncestorContainer.parentNode == editableDiv) {
+                if (range.commonAncestorContainer.parentNode === editableDiv) {
                     caretPos = range.endOffset;
                 }
             }
         } else if (document.selection && document.selection.createRange) {
             range = document.selection.createRange();
-            if (range.parentElement() == editableDiv) {
+            if (range.parentElement() === editableDiv) {
                 var tempEl = document.createElement("span");
                 editableDiv.insertBefore(tempEl, editableDiv.firstChild);
                 var tempRange = range.duplicate();

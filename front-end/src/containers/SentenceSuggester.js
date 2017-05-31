@@ -23,14 +23,15 @@ export default class SentenceSuggester extends Component {
             },
             cardSelections: {
                 cursorPosition: [],
-                selections: []
+                selections: [],
+                focused: false
             },
             suggestions: [],
             jargons: this.jargons,
             cachedSelection: {},
             firstCharCaretCoordinates: {},
             selectedJargon: '',
-            selectedSuggestion: '',
+            selectedSuggestion: [],
             cardVisibility: false,
             numberOfWords: 2
         };
@@ -71,8 +72,8 @@ export default class SentenceSuggester extends Component {
         this.setState({'cardVisibility': cardVisibility});
     }
 
-    selectSuggestion(selectedSuggestion) {
-        this.setState({'selectedSuggestion': selectedSuggestion});
+    selectSuggestion(row, column) {
+        this.setState({'selectedSuggestion': [row, column]});
     }
 
     selectStyle(selectedStyle) {
@@ -118,7 +119,8 @@ export default class SentenceSuggester extends Component {
             });
             this.setCardSelections({
                 cursorPosition: [],
-                selections: cardSelections
+                selections: cardSelections,
+                focus: false
             });
         }
     }
