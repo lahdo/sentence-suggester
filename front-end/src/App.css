@@ -1,28 +1,3 @@
-/*@font-face {*/
-    /*font-family: "Computer Modern";*/
-    /*src: local('Computer Modern'), url('../public/fonts/cmunss.otf') format('opentype');*/
-/*}*/
-/*@font-face {*/
-    /*font-family: "Computer Modern";*/
-    /*src: local('Computer Modern'), url('../public/fonts/cmunsx.otf') format('opentype');*/
-    /*font-weight: bold;*/
-/*}*/
-/*@font-face {*/
-    /*font-family: "Computer Modern";*/
-    /*src: local('Computer Modern'), url('../public/fonts/cmunsi.otf') format('opentype');*/
-    /*font-style: italic, oblique;*/
-/*}*/
-/*@font-face {*/
-    /*font-family: "Computer Modern";*/
-    /*src: local('Computer Modern'), url('../public/fonts/cmunbxo.otf') format('opentype');*/
-    /*font-weight: bold;*/
-    /*font-style: italic, oblique;*/
-/*}*/
-
-body {
-    /*font-family: "Computer Modern", serif;*/
-}
-
 .App {
     text-align: center;
 }
@@ -112,9 +87,26 @@ nav.nav-bar .navbar-brand {
     list-style-type: none;
 }
 
-.sentences :hover {
+.single-word {
+    padding: 10px 3px;
+}
+
+/*.sentences :hover {*/
+    /*color: white;*/
+    /*background: #00ae84;*/
+    /*border-radius: 2px;*/
+/*}*/
+
+.sentences .selection{
     color: white;
     background: #00ae84;
+}
+
+.sentences .selection .first {
+    border-radius: 2px;
+}
+
+.sentences .selection .last {
     border-radius: 2px;
 }
 
@@ -140,5 +132,9 @@ nav.nav-bar .navbar-brand {
 }
 
 #caretIndicator {
+    display: inline-block;
+}
+
+.word {
     display: inline-block;
 }

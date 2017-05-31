@@ -21,7 +21,8 @@ def predict(query, **kwargs):
                                           max_number_of_words_predictions=4,
                                           number_of_combinations=7)
 
-    return list(set(predictions))  # remove duplicates
+    # return list(set(predictions))  # remove duplicates
+    return predictions
 
 
 def get_default_model():

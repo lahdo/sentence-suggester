@@ -21,6 +21,10 @@ export default class SentenceSuggester extends Component {
                 top: 0,
                 left: 0
             },
+            cardSelections: {
+                cursorPosition: [],
+                selections: []
+            },
             suggestions: [],
             jargons: this.jargons,
             cachedSelection: {},
@@ -37,9 +41,11 @@ export default class SentenceSuggester extends Component {
         this.setFirstCharCaretCoordinates = this.setFirstCharCaretCoordinates.bind(this);
         this.setCachedSelection = this.setCachedSelection.bind(this);
         this.selectStyle = this.selectStyle.bind(this);
+        this.setCardSelections = this.setCardSelections.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.getJargons = this.getJargons.bind(this);
-        this.doSearchRequest = debounce(this.doSearchRequest, 300, {
+        this.reinitializeCardSelections = this.reinitializeCardSelections.bind(this);
+        this.doSearchRequest = debounce(this.doSearchRequest, 200, {
             trailing: true
         });
     }
@@ -55,6 +61,10 @@ export default class SentenceSuggester extends Component {
 
     setCaretCoordinates(caretCoordinates) {
         this.setState({'caretCoordinates': caretCoordinates});
+    }
+
+    setCardSelections(cardSelections) {
+        this.setState({'cardSelections': cardSelections});
     }
 
     setCardVisibility(cardVisibility) {
@@ -82,7 +92,8 @@ export default class SentenceSuggester extends Component {
             response => response.json()
         ).then(
             suggestions => {
-                this.setState({'suggestions': suggestions})
+                this.setState({'suggestions': suggestions});
+                this.reinitializeCardSelections(suggestions)
             }
         );
     }
@@ -95,6 +106,21 @@ export default class SentenceSuggester extends Component {
                 this.setState({'jargons': jargons.models})
             }
         );
+    }
+
+    reinitializeCardSelections(suggestions) {
+        let cardSelections = [];
+        if(suggestions.length) {
+            suggestions.map((sentence) => {
+                let row = [];
+                sentence.map(() => row.push(false));
+                cardSelections.push(row);
+            });
+            this.setCardSelections({
+                cursorPosition: [],
+                selections: cardSelections
+            });
+        }
     }
 
     getDefaultJargon() {
@@ -131,6 +157,9 @@ export default class SentenceSuggester extends Component {
 
                          cachedSelection={ this.state.cachedSelection }
                          setCachedSelection={ this.setCachedSelection }
+
+                         cardSelections={ this.state.cardSelections }
+                         setCardSelections={ this.setCardSelections }
 
                          cardVisibility={ this.state.cardVisibility }
                          setCardVisibility={ this.setCardVisibility }

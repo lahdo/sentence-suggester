@@ -34,7 +34,8 @@ class Corpus(object):
     def normalize_prediction(self, predictions):
         normalized_predictions = [item[0] for item in predictions]
 
-        return [" ".join(item) for item in normalized_predictions]
+        # return [" ".join(item[2:]) for item in normalized_predictions]
+        return [item[2:] for item in normalized_predictions]
 
     def make_sentence_predictions(self, input, number_of_combinations, max_number_of_words_predictions):
         initial_len = len(input[0])
