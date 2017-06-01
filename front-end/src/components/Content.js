@@ -18,7 +18,6 @@ export default class Content extends Component {
         this.onClick = this.onClick.bind(this);
         this.onInput = this.onInput.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
-        this.onKeyUp = this.onKeyUp.bind(this);
         this.insertCaretIndicator = this.insertCaretIndicator.bind(this);
         this.insertTextAtCursor = this.insertTextAtCursor.bind(this);
         this.removeCaretIndicator = this.removeCaretIndicator.bind(this);
@@ -39,6 +38,7 @@ export default class Content extends Component {
 
         this.getSelectedWords = this.getSelectedWords.bind(this);
         this.placeCaretAtEnd = this.placeCaretAtEnd.bind(this);
+        this.onMouseOver = this.onMouseOver.bind(this);
     }
 
     placeCaretAtEnd(el) {
@@ -251,8 +251,9 @@ export default class Content extends Component {
         // );
     }
 
-    onKeyUp(e) {
-        ///this.handleChange(e);
+    onMouseOver(row, column) {
+        console.log("Row, col: ", row, " ", column);
+        this.processCardSelections(true, [row, column], true);
     }
 
     onClick(e) {
@@ -430,6 +431,7 @@ export default class Content extends Component {
                                     <Card
                                         cardSelections={ this.props.cardSelections }
                                         setCardSelections={ this.setCardSelections }
+                                        onMouseOver={ this.onMouseOver }
 
                                         cardStyles={this.props.cardStyles}
                                         selectSuggestion={this.props.selectSuggestion}

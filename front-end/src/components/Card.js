@@ -27,8 +27,9 @@ export default class Card extends Component {
 
     renderWords(word, row, column) {
         return (
-            <div key={column} className="word">
+            <div key={column} className="word noselect">
               <span onClick={() => this.props.selectSuggestion(row, column)}
+                    onMouseOver={ () => this.props.onMouseOver(row, column) }
                     className={this.isFocused(row, column) ? 'selection single-word' : 'single-word'}>
                   {word}
              </span>
