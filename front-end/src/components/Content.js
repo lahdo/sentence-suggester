@@ -20,7 +20,6 @@ export default class Content extends Component {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.insertCaretIndicator = this.insertCaretIndicator.bind(this);
-        this.insert = this.insert.bind(this);
         this.insertTextAtCursor = this.insertTextAtCursor.bind(this);
         this.removeCaretIndicator = this.removeCaretIndicator.bind(this);
         this.getCaretRelativePosition = this.getCaretRelativePosition.bind(this);
@@ -39,7 +38,27 @@ export default class Content extends Component {
         this.processCardSelections = this.processCardSelections.bind(this);
 
         this.getSelectedWords = this.getSelectedWords.bind(this);
+        this.placeCaretAtEnd = this.placeCaretAtEnd.bind(this);
     }
+
+    placeCaretAtEnd(el) {
+        el.focus();
+        if (typeof window.getSelection != "undefined"
+            && typeof document.createRange != "undefined") {
+            let range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            let sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        } else if (typeof document.body.createTextRange != "undefined") {
+            let textRange = document.body.createTextRange();
+            textRange.moveToElementText(el);
+            textRange.collapse(false);
+            textRange.select();
+        }
+    }
+
 
     componentDidMount() {
     }
@@ -198,7 +217,7 @@ export default class Content extends Component {
         return !(row < 0);
     }
 
-    handleChange(e) {
+    handleChange() {
         let caretCoordinates = this.getCaretCoordinates();
         this.props.setCaretCoordinates(caretCoordinates);
         this.props.setCachedSelection(this.getCurrentSelection());
@@ -238,14 +257,15 @@ export default class Content extends Component {
 
     onClick(e) {
         // e.preventDefault();
-        this.handleChange(e);
+        this.handleChange();
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (this.props.selectedSuggestion !== nextProps.selectedSuggestion) {
-
             let words = this.getSelectedWords(nextProps.selectedSuggestion[0], nextProps.selectedSuggestion[1]);
             this.insertTextAtCursor(' ' + words.join(' '));
+            this.placeCaretAtEnd(ReactDOM.findDOMNode(this.refs.page));
+            this.handleChange();
         }
     }
 
@@ -296,7 +316,7 @@ export default class Content extends Component {
     }
 
     getCaretRelativePosition(editableDiv) {
-        var caretPos = 0,
+        let caretPos = 0,
             sel, range;
         if (window.getSelection) {
             sel = window.getSelection();
@@ -367,32 +387,10 @@ export default class Content extends Component {
         }
     }
 
-    insert(html) { // http://stackoverflow.com/a/6691294/3959662
-        let selection, range;
-        let element = document.createElement('div');
-        element.innerHTML = html;
-
-        if (window.getSelection) {
-            selection = window.getSelection();
-            if (selection.getRangeAt && selection.rangeCount) {
-                range = selection.getRangeAt(0);
-
-                let fragment = document.createDocumentFragment(), node, lastNode;
-
-                while ((node = element.firstChild)) {
-                    lastNode = fragment.appendChild(node);
-                }
-                range.insertNode(fragment);
-            }
-        } else if (document.selection && document.selection.type !== "Control") {
-            document.selection.createRange().pasteHTML(html); // IE < 9
-        }
-    }
-
     onInput(e) {
         // e.preventDefault();
         ReactDOM.findDOMNode(this.refs.page).textContent ? this.props.setCardVisibility(true) : this.props.setCardVisibility(false);
-        this.handleChange(e);
+        this.handleChange();
     }
 
     render() {
