@@ -93,8 +93,8 @@ export default class SentenceSuggester extends Component {
             response => response.json()
         ).then(
             suggestions => {
+                this.reinitializeCardSelections(suggestions);
                 this.setState({'suggestions': suggestions});
-                this.reinitializeCardSelections(suggestions)
             }
         );
     }

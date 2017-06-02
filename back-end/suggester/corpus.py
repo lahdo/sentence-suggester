@@ -20,7 +20,7 @@ class Corpus(object):
         sentences_predictions = \
             self.make_sentence_predictions(input, number_of_combinations, max_number_of_words_predictions)
 
-        print("No of sentences: ", len(sentences_predictions))
+        print("No of sentences ", len(sentences_predictions))
 
         sorted_sentences_predictions = sorted(sentences_predictions, key=itemgetter(1), reverse=True)
 
@@ -53,6 +53,15 @@ class Corpus(object):
 
             sentences = enhanced_sentences
 
+        sentences = self.clean_sentences(sentences)
+
+        return sentences
+
+    def clean_sentences(self, sentences):
+        for sentence in sentences:
+            for word in sentence[0]:
+                if word == '___END__':
+                    sentence[0].remove(word)
         return sentences
 
     def move_window(self, input, window_width):

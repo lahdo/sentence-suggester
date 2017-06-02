@@ -2,6 +2,7 @@ import markovify
 import json
 from suggester import Text, CorpusBuilder
 import redis
+import autocomplete
 
 
 def smoke_test():
@@ -134,6 +135,11 @@ def prepare_redis_model_from_source(json_model, model_name, state_size=2):
     corpus.build()
 
 
+def test_autocomplete(beginning, letters):
+    autocomplete.load()
+    print(autocomplete.predict(beginning,letters))
+
+
 
 # smoke_test()
 # prepare_model("./models/raw/sherlock.txt", "./models/sherlock_corpus.json")
@@ -147,6 +153,7 @@ def prepare_redis_model_from_source(json_model, model_name, state_size=2):
 # convert_csv()
 
 # redis_test()
-prepare_redis_model('./models/marcin_rapacz.txt', "rapacz")
+# prepare_redis_model('./models/marcin_rapacz.txt', "rapacz")
 # prepare_redis_model_from_source('./models/news.json', "news")
 # prepare_books_redis_models()
+test_autocomplete('with','o')
