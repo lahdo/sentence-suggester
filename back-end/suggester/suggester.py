@@ -4,10 +4,11 @@ from suggester import Text, Corpus
 
 
 def suggest(query, numberOfWords=2, **kwargs):
-    if (len(query['words']) < numberOfWords):
-        return []
-    else:
-        return predict(query)
+    # if (len(query['words']) < numberOfWords):
+    #     return []
+    # else:
+    #     return predict(query)
+    return predict(query)
 
 
 def predict(query, **kwargs):
@@ -67,4 +68,4 @@ MODELS = {
     },
 }
 
-DEFAULT_MODEL = MODELS['sherlock']
+DEFAULT_MODEL = MODELS['books']

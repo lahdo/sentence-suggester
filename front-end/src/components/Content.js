@@ -252,7 +252,7 @@ export default class Content extends Component {
     }
 
     onMouseOver(row, column) {
-        console.log("Row, col: ", row, " ", column);
+        // console.log("Row, col: ", row, " ", column);
         this.processCardSelections(true, [row, column], true);
     }
 
