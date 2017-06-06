@@ -46,7 +46,7 @@ export default class SentenceSuggester extends Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.getJargons = this.getJargons.bind(this);
         this.reinitializeCardSelections = this.reinitializeCardSelections.bind(this);
-        this.doSearchRequest = debounce(this.doSearchRequest, 100, {
+        this.doSearchRequest = debounce(this.doSearchRequest, 200, {
             trailing: true
         });
     }

@@ -1,6 +1,6 @@
 import markovify
 import json
-from suggester import Text, CorpusBuilder
+from suggester import Text, CorpusBuilder, LetterCorpusBuilder
 import redis
 import autocomplete
 from gensim.summarization import keywords
@@ -91,9 +91,9 @@ def prepare_books_models():
     for i in range(20):
         prepare_model("./models/books/%s.txt" % str(i+1), "./models/book_models/%s.json" % str(i+1))
 
-def prepare_books_redis_models():
+def prepare_books_redis_models(state_size=2):
     for i in range(20):
-        prepare_redis_model("./models/books/%s.txt" % str(i+1), "books")
+        prepare_redis_model("./models/books/%s.txt" % str(i+1), "books", state_size)
 
 def prepare_wiki_model():
     prepare_model("./models/wiki/wikipedia_partial.txt", "./models/wiki_models/wikipedia_partial.json")
@@ -119,9 +119,20 @@ def prepare_redis_model(raw_text, model_name, state_size=2):
         text = f.read()
 
     # Build the model.
-    text_model = markovify.Text(text, state_size=2)
+    text_model = markovify.Text(text, state_size=state_size)
 
-    corpus = CorpusBuilder(text_model=text_model, model_name=model_name, state_size=2)
+    corpus = CorpusBuilder(text_model=text_model, model_name=model_name, state_size=state_size)
+    corpus.build()
+
+def prepare_redis_letter_model(raw_text, model_name, state_size=1):
+    # Get raw text as string.
+    with open(raw_text) as f:
+        text = f.read()
+
+    # Build the model.
+    text_model = markovify.Text(text, state_size=state_size)
+
+    corpus = LetterCorpusBuilder(text_model=text_model, model_name=model_name, state_size=state_size)
     corpus.build()
 
 def prepare_redis_model_from_source(json_model, model_name, state_size=2):
@@ -132,9 +143,12 @@ def prepare_redis_model_from_source(json_model, model_name, state_size=2):
 
     text_model = Text.from_json(model_json)
 
-    corpus = CorpusBuilder(text_model=text_model, model_name=model_name, state_size=2)
+    corpus = CorpusBuilder(text_model=text_model, model_name=model_name, state_size=state_size)
     corpus.build()
 
+def prepare_books_redis_letter_model():
+    for i in range(20):
+        prepare_redis_letter_model("./models/books/%s.txt" % str(i+1), "letters", 1)
 
 def test_autocomplete(beginning, letters):
     autocomplete.load()
@@ -159,8 +173,11 @@ def gensim_keywords():
 # convert_csv()
 
 # redis_test()
-# prepare_redis_model('./models/marcin_rapacz.txt', "rapacz")
+# prepare_redis_model('./models/marcin_rapacz.txt', "rapacz", 1)
+# prepare_redis_letter_model('./models/books/1.txt', "letter", 1)
 # prepare_redis_model_from_source('./models/news.json', "news")
 # prepare_books_redis_models()
+# prepare_books_redis_letter_model()
 # test_autocomplete('without','the')
-gensim_keywords()
+# gensim_keywords(
+prepare_books_redis_models(4)
