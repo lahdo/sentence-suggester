@@ -26,6 +26,7 @@ export default class SentenceSuggester extends Component {
                 selections: [],
                 focused: false
             },
+            inputtedWords: [],
             suggestions: [],
             jargons: this.jargons,
             cachedSelection: {},
@@ -46,6 +47,7 @@ export default class SentenceSuggester extends Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.getJargons = this.getJargons.bind(this);
         this.reinitializeCardSelections = this.reinitializeCardSelections.bind(this);
+        this.cleanSuggestions = this.cleanSuggestions.bind(this);
         this.doSearchRequest = debounce(this.doSearchRequest, 200, {
             trailing: true
         });
@@ -94,9 +96,20 @@ export default class SentenceSuggester extends Component {
         ).then(
             suggestions => {
                 this.reinitializeCardSelections(suggestions);
+                suggestions = this.cleanSuggestions(suggestions);
                 this.setState({'suggestions': suggestions});
             }
         );
+    }
+
+    cleanSuggestions(suggestions) {
+        suggestions.map( suggestion => {
+            if(suggestion == 1) {
+
+            }
+        });
+
+        return suggestions;
     }
 
     getJargons() {
@@ -138,6 +151,8 @@ export default class SentenceSuggester extends Component {
     handleSearch(arrayOfWords, jargon = 'default') {
         const selectedJargon = jargon !== 'default' ? jargon : this.state.selectedJargon;
 
+        this.setState({'inputtedWords': arrayOfWords});
+
         const searchObject = {
             words: arrayOfWords,
             jargon: selectedJargon
@@ -174,6 +189,8 @@ export default class SentenceSuggester extends Component {
 
                          onSearch={ this.handleSearch }
                          numberOfWords={ this.state.numberOfWords }
+
+                         inputtedWords={ this.state.inputtedWords }
 
                          caretCoordinates={ this.state.caretCoordinates }
                          setCaretCoordinates={ this.setCaretCoordinates }/>

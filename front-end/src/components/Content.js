@@ -429,9 +429,12 @@ export default class Content extends Component {
                             {
                                 this.props.cardVisibility ?
                                     <Card
+                                        selectedSuggestion={this.props.selectedSuggestion}
                                         cardSelections={ this.props.cardSelections }
                                         setCardSelections={ this.setCardSelections }
                                         onMouseOver={ this.onMouseOver }
+
+                                        inputtedWords={ this.props.inputtedWords }
 
                                         cardStyles={this.props.cardStyles}
                                         selectSuggestion={this.props.selectSuggestion}

@@ -18,9 +18,9 @@ def predict(query, **kwargs):
     corpus = Corpus(models=get_models(jargon))
 
     predictions = corpus.make_predictions(beginning=words,
-                                          number_of_sentence_predictions=4,
-                                          max_number_of_words_predictions=4,
-                                          number_of_combinations=7)
+                                          number_of_sentence_predictions=3,
+                                          max_number_of_words_predictions=3,
+                                          number_of_combinations=5)
 
     # return list(set(predictions))  # remove duplicates
     return predictions

@@ -31,7 +31,7 @@ export default class Card extends Component {
               <span onClick={() => this.props.selectSuggestion(row, column)}
                     onMouseOver={ () => this.props.onMouseOver(row, column) }
                     className={this.isFocused(row, column) ? 'selection single-word' : 'single-word'}>
-                  {word}
+                  <span>{word}</span>
              </span>
             </div>
         );
