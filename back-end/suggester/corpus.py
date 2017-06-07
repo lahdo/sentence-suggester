@@ -1,17 +1,11 @@
 from .redis import StrictRedis
 from operator import itemgetter
 from suggester.input import Input
+from suggester.modes import Mode
 
 MARKERS = {
     "END": "___END__"
 }
-
-MODES = {
-    "FIRST_WORD": "FIRST_WORD",
-    "SPACE_AT_THE_END": "SPACE_AT_THE_END",
-    "NO_SPACE_AT_THE_END": "NO_SPACE_AT_THE_END"
-}
-
 
 class Corpus(object):
     """
@@ -31,34 +25,28 @@ class Corpus(object):
                          max_number_of_words_predictions=4,
                          number_of_combinations=4):
 
-        predictions = []
-
-        mode = self.detect_mode(beginning)
-        space = False
+        mode = Mode.detect_mode(beginning)
+        space = True if mode == Mode.SPACE_AT_THE_END else False
 
         beginning = list(filter(None, beginning)) # Remove spaces
 
-        # mapping = {
-        #     MODES["FIRST_WORD"]: self.handle_case_1
-        # }
-        #
-        # predictions = mapping[mode](beginning, number_of_sentence_predictions, max_number_of_words_predictions, number_of_combinations)
+        mapping = {
+            Mode.NO_MODE: lambda *x: [],
+            Mode.FIRST_WORD: self.handle_first_word,
+            Mode.NO_SPACE_AT_THE_END: self.handle_no_space,
+            Mode.SPACE_AT_THE_END: self.handle_space
+        }
 
-        if (mode == MODES["FIRST_WORD"]):  # Predict just next word
-            predictions = self.handle_case_1(beginning, number_of_sentence_predictions, max_number_of_words_predictions, number_of_combinations)
-
-        elif (mode == MODES["SPACE_AT_THE_END"]):
-            predictions = self.handle_case_2(beginning, number_of_sentence_predictions, max_number_of_words_predictions, number_of_combinations)
-            space = True
-
-        elif (mode == MODES["NO_SPACE_AT_THE_END"]):
-            predictions = self.handle_case_3(beginning, number_of_sentence_predictions, max_number_of_words_predictions, number_of_combinations)
+        predictions = mapping[mode](beginning,
+                                    number_of_sentence_predictions,
+                                    max_number_of_words_predictions,
+                                    number_of_combinations)
 
         processed_predictions = self.process_predictions(predictions, number_of_sentence_predictions, beginning, space)
 
         return processed_predictions
 
-    def handle_case_1(self,
+    def handle_first_word(self,
                       beginning,
                       number_of_sentence_predictions=5,
                       max_number_of_words_predictions=4,
@@ -73,7 +61,7 @@ class Corpus(object):
 
         return predictions
 
-    def handle_case_2(self,
+    def handle_space(self,
                       beginning,
                       number_of_sentence_predictions=5,
                       max_number_of_words_predictions=4,
@@ -81,27 +69,22 @@ class Corpus(object):
         inputs = []
 
         if (len(beginning)> 1):  # At least two words
-            number_of_provided_words = len(beginning)
-            number_of_words_in_input = self.MAX_N+2 if self.MAX_N < number_of_provided_words else number_of_provided_words+2
-            range_for_loop = range(-3, -number_of_words_in_input, -1)
+            range_for_loop = self.calculate_range(beginning)
 
             for index in range_for_loop:
                 words = (beginning[-1:index:-1])[::-1]
                 input = Input(words)
                 inputs.append(input)
-
-            predictions = \
-                self.process(inputs, number_of_combinations, max_number_of_words_predictions)
         else:
             input = Input([beginning[-1]])
             inputs.append(input)
 
-            predictions = \
+        predictions = \
                 self.process(inputs, number_of_combinations, max_number_of_words_predictions)
 
         return predictions
 
-    def handle_case_3(self,
+    def handle_no_space(self,
                       beginning,
                       number_of_sentence_predictions=5,
                       max_number_of_words_predictions=4,
@@ -110,9 +93,7 @@ class Corpus(object):
         predictions = []
 
         if (len(beginning) > 1):  # At least two words
-            number_of_provided_words = len(beginning)
-            number_of_words_in_input = self.MAX_N+2 if self.MAX_N < number_of_provided_words else number_of_provided_words+2
-            range_for_loop = range(-3, -number_of_words_in_input, -1)
+            range_for_loop = self.calculate_range(beginning)
 
             input = Input([beginning[-2], beginning[-1]])
 
@@ -131,6 +112,11 @@ class Corpus(object):
 
         return predictions
 
+    def calculate_range(self, beginning):
+        number_of_provided_words = len(beginning)
+        number_of_words_in_input = self.MAX_N+2 if self.MAX_N < number_of_provided_words else number_of_provided_words+2
+        return range(-3, -number_of_words_in_input, -1)
+
     def process(self, inputs, number_of_combinations, max_number_of_words_predictions):
         all_predictions = []
 
@@ -139,18 +125,6 @@ class Corpus(object):
             all_predictions += (predictions)
 
         return all_predictions
-
-    def detect_mode(self, beginning):
-        length = len(beginning)
-        if (length == 1):
-            # First word in a sentence, ex. "th" or "this"
-            return MODES["FIRST_WORD"]
-            # Word + " " + word, ex. "this is"
-        elif (length and beginning[-1] == ""):
-            return MODES["SPACE_AT_THE_END"]
-            # Word + " " + word + " ", ex. "this is "
-        elif (length and beginning[-1] != ""):
-            return MODES["NO_SPACE_AT_THE_END"]
 
     def predict_next_word(self, beginning, number_of_sentence_predictions):
         first_word = beginning.words[0]
@@ -179,6 +153,8 @@ class Corpus(object):
         else:
             predictions = [] + sorted_sentences_predictions
 
+        predictions = self.clean_predictions(predictions)
+
         return self.normalize_prediction(predictions, beginning, space)
 
     def normalize_prediction(self, predictions, beginning, space):
@@ -190,11 +166,8 @@ class Corpus(object):
         return normalized_predictions
 
     def remove_beginning(self, predictions, beginning, space):
-        number_of_provided_words = len(beginning)
-        number_of_words_in_input = self.MAX_N+2 if self.MAX_N < number_of_provided_words else number_of_provided_words+2
-        range_for_loop = range(-3, -number_of_words_in_input, -1)
-
         possible_inputs = []
+        range_for_loop = self.calculate_range(beginning)
 
         if(space and len(beginning) == 1):
             possible_inputs.append([beginning[0]])
@@ -230,22 +203,14 @@ class Corpus(object):
 
             sentences = enhanced_sentences
 
-        sentences = self.clean_sentences(sentences)
-        # sentences = self.remove_input_words(sentences, initial_len)
-
         return sentences
 
-    def clean_sentences(self, sentences):
-        for sentence in sentences:
-            for word in sentence[0]:
+    def clean_predictions(self, predictions):
+        for prediction in predictions:
+            for word in prediction.words:
                 if word == MARKERS["END"]:
-                    sentence[0].remove(word)
-        return sentences
-
-    def remove_input_words(self, sentences, number_of_words):
-        for sentence in sentences:
-            del sentence[0][0:number_of_words]
-        return sentences
+                    prediction.words.remove(word)
+        return predictions
 
     def move_window(self, input, window_width):
         return input[-window_width:]  # return last "window_width" elements
@@ -256,9 +221,7 @@ class Corpus(object):
         beginning = self.move_window(input.words, window_width=initial_len)
 
         key_name = self.generate_key(self.models, beginning)
-        if(len(beginning) > 3):
-            a = 1
-        # print(key_name)
+
         possible_words = self.predict_words(key_name, number_of_combinations)
         possible_words_len = len(possible_words)
 
