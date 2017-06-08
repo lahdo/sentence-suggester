@@ -7,6 +7,7 @@ export default class Card extends Component {
         this.isFocused = this.isFocused.bind(this);
         this.renderSentences = this.renderSentences.bind(this);
         this.renderWords = this.renderWords.bind(this);
+        this.renderWord = this.renderWord.bind(this);
     }
 
     calculateCardStyle() {
@@ -27,12 +28,35 @@ export default class Card extends Component {
 
     renderWords(word, row, column) {
         return (
-            <div key={column} className="word noselect">
+            <div key={column} className="words noselect">
               <span onClick={() => this.props.selectSuggestion(row, column)}
                     onMouseOver={ () => this.props.onMouseOver(row, column) }
                     className={this.isFocused(row, column) ? 'selection single-word' : 'single-word'}>
-                  <span>{word}</span>
+                  {this.renderWord(word)}
              </span>
+            </div>
+        );
+    }
+
+    renderWord(word) {
+        let beginning = '';
+        let ending = word;
+        let last = this.props.inputtedWords.length - 1;
+        let lastButOne = this.props.inputtedWords.length - 2;
+        let inputtedWord = this.props.inputtedWords[last] !== ""
+            ? this.props.inputtedWords[last]
+            : this.props.inputtedWords[lastButOne];
+        let isInputIncluded = word.indexOf(inputtedWord) === 0;
+
+        if (isInputIncluded) {
+            beginning = inputtedWord;
+            ending = word.slice(inputtedWord.length);
+        }
+
+        return (
+            <div className="word">
+                <span className="beginning">{beginning}</span>
+                <span className="ending">{ending}</span>
             </div>
         );
     }

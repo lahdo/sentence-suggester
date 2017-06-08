@@ -138,6 +138,17 @@ nav.nav-bar .navbar-brand {
 .word {
     display: inline-block;
 }
+.words {
+    display: inline-block;
+}
+
+.words .ending {
+    font-weight: bold;
+}
+
+.words .beginning {
+    font-weight: normal;
+}
 
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
