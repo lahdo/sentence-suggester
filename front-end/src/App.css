@@ -41,7 +41,7 @@ nav.nav-bar .navbar-brand {
     background: #fff;
     color: #000;
     /*width: 21cm;*/
-    height: 29.7cm;
+    min-height: 29.7cm;
     padding: 2cm;
     display: block;
     margin: 7px auto;
