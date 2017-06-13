@@ -8,7 +8,7 @@ export default class Page extends Component {
 
     onPaste(e) {
         e.preventDefault();
-        var text = e.clipboardData.getData("text/plain");
+        let text = e.clipboardData.getData("text/plain");
         document.execCommand("insertHTML", false, text);
     }
 

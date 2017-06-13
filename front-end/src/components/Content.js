@@ -400,6 +400,11 @@ export default class Content extends Component {
                 <Grid>
                     <Row>
                         <Col md={6} mdOffset={3}>
+                            <h1 className="appTitle">Sentence Suggester</h1>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6} mdOffset={3}>
                             <StyleSelector jargons={this.props.jargons}
                                            selectedJargon={this.props.selectedJargon}
                                            selectStyle={this.props.selectStyle}/>

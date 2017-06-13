@@ -7,6 +7,7 @@ MARKERS = {
     "END": "___END__"
 }
 
+
 class Corpus(object):
     """
     A Markov chain representing processes that have both beginnings and ends.
@@ -28,7 +29,7 @@ class Corpus(object):
         mode = Mode.detect_mode(beginning)
         space = True if mode == Mode.SPACE_AT_THE_END else False
 
-        beginning = list(filter(None, beginning)) # Remove spaces
+        beginning = list(filter(None, beginning))  # Remove spaces
 
         mapping = {
             Mode.NO_MODE: lambda *x: [],
@@ -47,10 +48,10 @@ class Corpus(object):
         return processed_predictions
 
     def handle_first_word(self,
-                      beginning,
-                      number_of_sentence_predictions=5,
-                      max_number_of_words_predictions=4,
-                      number_of_combinations=4):
+                          beginning,
+                          number_of_sentence_predictions=5,
+                          max_number_of_words_predictions=4,
+                          number_of_combinations=4):
 
         first_word = beginning[0]
         second_word = ""
@@ -62,13 +63,13 @@ class Corpus(object):
         return predictions
 
     def handle_space(self,
-                      beginning,
-                      number_of_sentence_predictions=5,
-                      max_number_of_words_predictions=4,
-                      number_of_combinations=4):
+                     beginning,
+                     number_of_sentence_predictions=5,
+                     max_number_of_words_predictions=4,
+                     number_of_combinations=4):
         inputs = []
 
-        if (len(beginning)> 1):  # At least two words
+        if (len(beginning) > 1):  # At least two words
             range_for_loop = self.calculate_range(beginning)
 
             for index in range_for_loop:
@@ -80,15 +81,15 @@ class Corpus(object):
             inputs.append(input)
 
         predictions = \
-                self.process(inputs, number_of_combinations, max_number_of_words_predictions)
+            self.process(inputs, number_of_combinations, max_number_of_words_predictions)
 
         return predictions
 
     def handle_no_space(self,
-                      beginning,
-                      number_of_sentence_predictions=5,
-                      max_number_of_words_predictions=4,
-                      number_of_combinations=4):
+                        beginning,
+                        number_of_sentence_predictions=5,
+                        max_number_of_words_predictions=4,
+                        number_of_combinations=4):
         inputs = []
         predictions = []
 
@@ -114,7 +115,7 @@ class Corpus(object):
 
     def calculate_range(self, beginning):
         number_of_provided_words = len(beginning)
-        number_of_words_in_input = self.MAX_N+2 if self.MAX_N < number_of_provided_words else number_of_provided_words+2
+        number_of_words_in_input = self.MAX_N + 2 if self.MAX_N < number_of_provided_words else number_of_provided_words + 2
         return range(-3, -number_of_words_in_input, -1)
 
     def process(self, inputs, number_of_combinations, max_number_of_words_predictions):
@@ -158,7 +159,7 @@ class Corpus(object):
         return self.normalize_prediction(predictions, beginning, space)
 
     def normalize_prediction(self, predictions, beginning, space):
-        normalized_predictions = [item.words for item in predictions] # Get only words, without scores
+        normalized_predictions = [item.words for item in predictions]  # Get only words, without scores
         normalized_predictions = self.remove_beginning(normalized_predictions, beginning, space)
 
         # return [" ".join(item[2:]) for item in normalized_predictions]
@@ -169,9 +170,9 @@ class Corpus(object):
         possible_inputs = []
         range_for_loop = self.calculate_range(beginning)
 
-        if(space and len(beginning) == 1):
+        if (space and len(beginning) == 1):
             possible_inputs.append([beginning[0]])
-        elif(space):
+        elif (space):
             for index in range_for_loop:
                 possible_inputs.append((beginning[-1:index:-1])[::-1])
         else:
@@ -179,9 +180,16 @@ class Corpus(object):
                 possible_inputs.append((beginning[-2:index:-1])[::-1])
 
         for index, prediction in enumerate(predictions):
+            predictions[index] = {
+                "beginning": "",
+                "ending": predictions[index]
+            }
             for input in possible_inputs[::-1]:
-                if(prediction[0:len(input):1] == input):
-                    predictions[index] = prediction[len(input):]
+                if (prediction[0:len(input):1] == input):
+                    predictions[index] = {
+                        "beginning": input,
+                        "ending": prediction[len(input):]
+                    }
                     break
 
         return predictions
@@ -230,7 +238,7 @@ class Corpus(object):
             sentence = [] + input.words
             sentence.append(possible_words[i][0].decode("utf-8"))
 
-            score = input.score + possible_words[i][1] + len(beginning)*self.N_GRAM_WEIGHT
+            score = input.score + possible_words[i][1] + len(beginning) * self.N_GRAM_WEIGHT
 
             prediction = Input(sentence, score)
             sentence_predictions.append(prediction)

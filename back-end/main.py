@@ -159,7 +159,9 @@ def gensim_keywords():
            "The new meaning of ‘over the counter’ In grocery stores fifty years ago, there used to be a clear divide between the consumers and the goods. Groceries could be accessed only through the shop clerk, who was the gatekeeper. It was useful to have someone from whom to advice, but over time, it became clear that it was a far better to be allowed to make their own decisions. The same switch is now happening in healthcare. Due to the improved access to information in the ‘WebMD’ era, people often have an idea of what is wrong with them when they are ill. Also, they are generally health-conscious, and therefore keen to ensure they remain healthy today’ so they don’t become a patient tomorrow. Due to this change in behavior and improved access to information, there is now room in the market for consumer-grade healthcare products and digital tools to ensure these products are available to large audiences, in new ways. Those who successfully build consumer products and brands in healthcare will win big in the next few years. Medical data is ripe for change. Our data is currently hidden in disparate patient records, but is becoming our own again thanks to platforms like PatientsKnowBest (full disclosure, Balderton is invested). Digital tools are also changing how we manage diseases. Behavior change programs are being turned into products, and scaled across a previously impossible large number of patients. This is particularly powerful when tackling healthcare problems that affect a nation of people, and emanate from poor lifestyle."
 
     print('Keywords: ')
-    print(keywords(text, ratio=0.1))
+
+    pos_filter = ['JJ', 'CC', 'CD', 'DT', 'JJ', 'EX', 'RB', 'WRB', 'WP$', 'WP', 'VB']
+    print(keywords(text, ratio=0.1, pos_filter=pos_filter, split=True))
 
 # smoke_test()
 # prepare_model("./models/raw/sherlock.txt", "./models/sherlock_corpus.json")
@@ -179,5 +181,5 @@ def gensim_keywords():
 # prepare_books_redis_models()
 # prepare_books_redis_letter_model()
 # test_autocomplete('without','the')
-# gensim_keywords(
-prepare_books_redis_models(4)
+gensim_keywords()
+# prepare_books_redis_models(4)

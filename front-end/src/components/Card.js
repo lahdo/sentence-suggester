@@ -8,6 +8,7 @@ export default class Card extends Component {
         this.renderSentences = this.renderSentences.bind(this);
         this.renderWords = this.renderWords.bind(this);
         this.renderWord = this.renderWord.bind(this);
+        this.renderBeginning = this.renderBeginning.bind(this);
     }
 
     calculateCardStyle() {
@@ -27,18 +28,6 @@ export default class Card extends Component {
     }
 
     renderWords(word, row, column) {
-        return (
-            <div key={column} className="words noselect">
-              <span onClick={() => this.props.selectSuggestion(row, column)}
-                    onMouseOver={ () => this.props.onMouseOver(row, column) }
-                    className={this.isFocused(row, column) ? 'selection single-word' : 'single-word'}>
-                  {this.renderWord(word)}
-             </span>
-            </div>
-        );
-    }
-
-    renderWord(word) {
         let beginning = '';
         let ending = word;
         let last = this.props.inputtedWords.length - 1;
@@ -54,6 +43,18 @@ export default class Card extends Component {
         }
 
         return (
+            <div key={column} className="words noselect">
+              <span onClick={() => this.props.selectSuggestion(row, column)}
+                    onMouseOver={ () => this.props.onMouseOver(row, column) }
+                    className={this.isFocused(row, column) ? 'selection single-word' : 'single-word'}>
+                  {this.renderWord(beginning, ending)}
+             </span>
+            </div>
+        );
+    }
+
+    renderWord(beginning, ending) {
+        return (
             <div className="word">
                 <span className="beginning">{beginning}</span>
                 <span className="ending">{ending}</span>
@@ -61,12 +62,27 @@ export default class Card extends Component {
         );
     }
 
+    renderBeginning(words, row) {
+        if (words.length) {
+            return (
+                words.map((word,index) =>
+                    <div key={index} className="words noselect">
+                                <span className={this.isFocused(row, 0) ? 'selection single-word' : 'single-word'}>
+                                    {this.renderWord(word, "")}
+                                </span>
+                    </div>
+                )
+            );
+        }
+    }
+
     renderSentences(suggestion, row) {
         return (
             <div key={row}>
                 <li className="suggestion">
+                    <span>{ this.renderBeginning(suggestion.beginning, row) }</span>
                     {
-                        suggestion.map(
+                        suggestion.ending.map(
                             (word, column) => this.renderWords(word, row, column)
                         )
                     }

@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth.models import User
+from keywords.views import KeywordsViewSet
 from rest_framework import routers, serializers, viewsets
 
 from suggestions.views import SuggestionsViewSet
@@ -26,6 +27,7 @@ from suggestions.views import DefaultJargonViewSet
 router = routers.DefaultRouter()
 
 urlpatterns = [
+    url(r'^api/v1/keywords', KeywordsViewSet.as_view()),
     url(r'^api/v1/suggestions', SuggestionsViewSet.as_view()),
     url(r'^api/v1/jargons/default', DefaultJargonViewSet.as_view()),
     url(r'^api/v1/jargons', JargonsViewSet.as_view()),

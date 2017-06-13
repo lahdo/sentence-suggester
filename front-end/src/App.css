@@ -29,12 +29,16 @@
 
 nav.nav-bar {
     background: #293a4a;
-    margin-bottom: 150px;
+    margin-bottom: 10px;
     color: white;
 }
 
 nav.nav-bar .navbar-brand {
     color: white;
+}
+
+h1.appTitle  {
+    margin-bottom: 15px;
 }
 
 .page {
@@ -122,7 +126,7 @@ nav.nav-bar .navbar-brand {
 }
 
 .styleSelector {
-    margin: 100px auto 10px auto;
+    margin: 5px auto 10px auto;
 }
 
 .currentStyleHeader {
@@ -158,4 +162,23 @@ nav.nav-bar .navbar-brand {
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+}
+
+span.label {
+    font-size: 20px;
+    margin-right: 5px;
+    /*white-space: normal;*/
+
+}
+
+.keywords {
+    border-bottom: 4px dashed #abc9ff;
+    border-top: 4px dashed #abc9ff;
+    margin: 15px 0 0;
+    padding: 15px 0 0;
+}
+
+.one-label {
+    display: inline-block;
+    margin-bottom: 15px;
 }

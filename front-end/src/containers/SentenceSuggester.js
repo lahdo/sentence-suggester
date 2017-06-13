@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import {debounce} from 'lodash';
 
 import Layout from '../components/Layout.js';
-import NavigationBar from '../components/NavigationBar.js';
+import NavigationBar from "../components/NavigationBar";
 import Content from '../components/Content.js';
 import Footer from '../components/Footer.js';
 
 import * as api from '../utils/api.js'
 
 import '../App.css';
+
 
 export default class SentenceSuggester extends Component {
     constructor(props) {
@@ -127,7 +128,7 @@ export default class SentenceSuggester extends Component {
         if(suggestions.length) {
             suggestions.map((sentence) => {
                 let row = [];
-                sentence.map(() => row.push(false));
+                sentence.ending.map(() => row.push(false));
                 cardSelections.push(row);
             });
             this.setCardSelections({
@@ -163,8 +164,6 @@ export default class SentenceSuggester extends Component {
 
     render() {
         return (
-            <Layout>
-                <NavigationBar />
                 <Content jargons={ this.state.jargons }
                          selectedJargon={ this.state.selectedJargon }
                          selectStyle={ this.selectStyle }
@@ -194,8 +193,6 @@ export default class SentenceSuggester extends Component {
 
                          caretCoordinates={ this.state.caretCoordinates }
                          setCaretCoordinates={ this.setCaretCoordinates }/>
-                <Footer />
-            </Layout>
         );
     }
 }
