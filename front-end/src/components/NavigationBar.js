@@ -25,6 +25,11 @@ export default class NavigationBar extends Component {
                                 <strong>Keywords Extractor</strong>
                             </LinkContainer>
                         </NavItem>
+                        <NavItem>
+                            <LinkContainer to="/sentiment-analyzer">
+                                <strong>Sentiment Analyzer</strong>
+                            </LinkContainer>
+                        </NavItem>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

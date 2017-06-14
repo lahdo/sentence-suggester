@@ -38,6 +38,17 @@ export default class AppsView extends Component {
                             </Panel>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col md={3} mdOffset={3}>
+                            <Panel >
+                                <Link to="sentiment-analyzer">Sentiment Analyzer</Link>
+                                <br/>
+                                <span>Analyze sentiment of each sentence in your text</span>
+                            </Panel>
+                        </Col>
+                        <Col md={3}>
+                        </Col>
+                    </Row>
                 </Grid>
             </div>
         );

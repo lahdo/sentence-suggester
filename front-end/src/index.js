@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+
+import AppsView from "./containers/AppsView";
 import SentenceSuggester from './containers/SentenceSuggester.js';
 import KeywordExtractor from './containers/KeywordExtractor.js';
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import SentimentAnalyzer from './containers/SentimentAnalyzer.js';
 
 import Layout from "./components/Layout";
 import NavigationBar from "./components/NavigationBar";
@@ -10,7 +13,6 @@ import Footer from "./components/Footer";
 
 import './index.css';
 import './bootstrap.css';
-import AppsView from "./containers/AppsView";
 
 ReactDOM.render((
         <Router>
@@ -23,6 +25,9 @@ ReactDOM.render((
                 <Route name="sentenceSuggester"
                        path="/sentence-suggester"
                        component={SentenceSuggester}/>
+                <Route name="sentimentAnalyzer"
+                       path="/sentiment-analyzer"
+                       component={SentimentAnalyzer}/>
                 <Route name="keywordsExtractor"
                        path="/keywords-extractor"
                        component={KeywordExtractor}/>

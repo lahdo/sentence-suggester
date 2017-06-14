@@ -19,6 +19,7 @@ from django.contrib.auth.models import User
 from keywords.views import KeywordsViewSet
 from rest_framework import routers, serializers, viewsets
 
+from sentiment.views import SentimentViewSet
 from suggestions.views import SuggestionsViewSet
 from suggestions.views import JargonsViewSet
 from suggestions.views import DefaultJargonViewSet
@@ -27,6 +28,7 @@ from suggestions.views import DefaultJargonViewSet
 router = routers.DefaultRouter()
 
 urlpatterns = [
+    url(r'^api/v1/sentiment', SentimentViewSet.as_view()),
     url(r'^api/v1/keywords', KeywordsViewSet.as_view()),
     url(r'^api/v1/suggestions', SuggestionsViewSet.as_view()),
     url(r'^api/v1/jargons/default', DefaultJargonViewSet.as_view()),

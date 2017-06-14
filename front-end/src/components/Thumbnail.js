@@ -23,15 +23,15 @@ export default class CustomThumbnail extends Component {
     }
 
     getUserNameAndSurname(image) {
-        return image.user.first_name + image.user.last_name
+        return image.user.first_name + ' ' + image.user.last_name;
     }
 
     getImageLink(image) {
-        return `${ this.unsplash }@${ image.user.username }${ this.utm }`
+        return `${ this.unsplash }@${ image.user.username }${ this.utm }`;
     }
 
     getUnsplashLink() {
-        return `${ this.unsplash }${ this.utm }`
+        return `${ this.unsplash }${ this.utm }`;
     }
 
     getImageDescription(image) {

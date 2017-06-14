@@ -5,6 +5,7 @@ const VERSION = '/api/v1/';
 const BASE = SERVER + VERSION;
 const ENDPOINTS = {
     suggestions: 'suggestions/',
+    sentiment: 'sentiment/',
     keywords: 'keywords/',
     jargons: 'jargons/',
     default_jargon: 'jargons/default',
@@ -30,6 +31,20 @@ export function getSuggestions(searchObject) {
 
 export function getKeywords(searchObject) {
     const endpoint = getApiAddress(ENDPOINTS['keywords']);
+
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    return fetch(`${endpoint}`, {
+            method: 'POST',
+            body: JSON.stringify(searchObject),
+            headers: myHeaders
+        }
+    )
+}
+
+export function getSentiments(searchObject) {
+    const endpoint = getApiAddress(ENDPOINTS['sentiment']);
 
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
