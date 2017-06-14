@@ -43,21 +43,24 @@ export default class Card extends Component {
         }
 
         return (
-            <div key={column} className="words noselect">
+            <div key={column} className='words noselect'>
               <span onClick={() => this.props.selectSuggestion(row, column)}
                     onMouseOver={ () => this.props.onMouseOver(row, column) }
                     className={this.isFocused(row, column) ? 'selection single-word' : 'single-word'}>
-                  {this.renderWord(beginning, ending)}
+                  {this.renderWord(beginning, ending, row)}
              </span>
             </div>
         );
     }
 
-    renderWord(beginning, ending) {
+    renderWord(beginning, ending, row) {
         return (
-            <div className="word">
-                <span className="beginning">{beginning}</span>
-                <span className="ending">{ending}</span>
+            <div className='word'>
+                <span className='beginning'
+                      onClick={() => this.props.selectSuggestion(row, 0)}
+                      onMouseOver={ () => this.props.onMouseOver(row, 0) }
+                >{beginning}</span>
+                <span className='ending'>{ending}</span>
             </div>
         );
     }
@@ -66,9 +69,10 @@ export default class Card extends Component {
         if (words.length) {
             return (
                 words.map((word,index) =>
-                    <div key={index} className="words noselect">
-                                <span className={this.isFocused(row, 0) ? 'selection single-word' : 'single-word'}>
-                                    {this.renderWord(word, "")}
+                    <div key={index} className='words noselect'>
+                                <span
+                                    className={this.isFocused(row, 0) ? 'selection single-word' : 'single-word'}>
+                                    {this.renderWord(word, "", row)}
                                 </span>
                     </div>
                 )
@@ -79,7 +83,7 @@ export default class Card extends Component {
     renderSentences(suggestion, row) {
         return (
             <div key={row}>
-                <li className="suggestion">
+                <li className='suggestion'>
                     <span>{ this.renderBeginning(suggestion.beginning, row) }</span>
                     {
                         suggestion.ending.map(

@@ -79,7 +79,7 @@ h1.appTitle  {
     padding-left: 4px;
     padding-right: 4px;
     padding-bottom: 3px;
-    font-size: 17px;
+    font-size: 2.5vh;
     color: #00ae84;
     font-family: "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, Helvetica, Arial, sans-serif;
     font-weight: 500;
@@ -168,17 +168,24 @@ span.label {
     font-size: 20px;
     margin-right: 5px;
     /*white-space: normal;*/
+}
 
+.caption span.label {
+    font-size: 16px;
 }
 
 .keywords {
     border-bottom: 4px dashed #abc9ff;
     border-top: 4px dashed #abc9ff;
-    margin: 15px 0 0;
+    margin: 15px 0 10px;
     padding: 15px 0 0;
 }
 
 .one-label {
     display: inline-block;
     margin-bottom: 15px;
+}
+
+.thumbnail > img, .thumbnail a > img {
+    width: 100%;
 }

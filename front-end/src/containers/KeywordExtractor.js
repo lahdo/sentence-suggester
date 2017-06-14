@@ -1,33 +1,35 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {Button, Col, Grid, Row} from "react-bootstrap";
-
-import '../App.css';
-import TextInput from "../components/TextInput";
-import Keywords from "../components/Keywords";
-import * as api from '../utils/api.js'
 import Unsplash from 'unsplash-js';
 
-const unsplash = new Unsplash({
-    applicationId: "398d7e71c384ba92212d51cc4317d90945ccdbaa093400cd2f445d3a564e6b93",
-    secret: "4557138090cffb041fccfc64024f863b63340bde6ee887cfc76ece0cc229956a",
-    callbackUrl: "urn:ietf:wg:oauth:2.0:oob"
-});
+import TextInput from '../components/TextInput';
+import Keywords from '../components/Keywords';
+import ImageGrid from '../components/ImageGrid';
+import * as api from '../utils/api.js'
+import {unsplashConfig} from '../constants.js';
 
-export default class SentenceSuggester extends Component {
+import styles from '../App.css';
+
+export default class KeywordExtractor extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             keywords: [],
-            inputtedText: ''
+            images: [],
+            inputtedText: '',
+            haveResults: false
         };
+
+        this.unsplash = new Unsplash(unsplashConfig);
+        this.maxKeywords = 4;
 
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
         this.onClick = this.onClick.bind(this);
+        this.getImages = this.getImages.bind(this);
     }
-
 
     handleSearch(text, ratio = 0.1) {
         this.setState({'inputtedText': text});
@@ -37,6 +39,7 @@ export default class SentenceSuggester extends Component {
             ratio: ratio
         };
 
+        this.setState({"images": []});
         this.doSearchRequest(searchObject);
     }
 
@@ -46,17 +49,36 @@ export default class SentenceSuggester extends Component {
         ).then(
             keywords => {
                 this.setState({'keywords': keywords});
-
-                keywords.map(keyword => {
-                        unsplash.photos.searchPhotos(keyword)
-                            .then(response => response.json())
-                            .then(json => {
-                                console.log(json)
-                            });
+                keywords.slice(0, this.maxKeywords).map(keyword => {
+                        this.getImages(keyword);
                     }
                 )
             }
         )
+    }
+
+    getImages(keyword) {
+        let pageNumber = 1;
+
+        this.unsplash.search.photos(keyword, pageNumber)
+            .then(response => response.json())
+            .then(data =>
+                this.setImages(data.results, keyword)
+            );
+    }
+
+    setImages(images, keyword) {
+        images.forEach((image) =>
+            image.keyword = keyword
+        );
+        this.setState({ "images": this.state.images.concat(images) });
+
+        if(images.length) {
+            this.setState({"haveResults": true})
+        }
+        else {
+            this.setState({"haveResults": false})
+        }
     }
 
     onClick() {
@@ -71,12 +93,14 @@ export default class SentenceSuggester extends Component {
                 <Grid>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <h1 className="appTitle">Keywords Extractor</h1>
+                            <h1 className={ styles.appTitle }>
+                                Keywords Extractor
+                            </h1>
                         </Col>
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <div className="styleSelector">
+                            <div className={ styles.styleSelector }>
                                 <Button bsStyle="primary"
                                         onClick={this.onClick}>
                                     Extract Keywords
@@ -85,7 +109,9 @@ export default class SentenceSuggester extends Component {
                             </div>
                         </Col>
                     </Row>
-
+                    <ImageGrid images={this.state.images}
+                               keywords={this.state.keywords}
+                               haveResults={this.state.haveResults}/>
                     <Row>
                         <Col md={6} mdOffset={3}>
                             <TextInput ref="textForKeywords"/>
@@ -93,6 +119,6 @@ export default class SentenceSuggester extends Component {
                     </Row>
                 </Grid>
             </div>
-        );
+        )
     }
 }

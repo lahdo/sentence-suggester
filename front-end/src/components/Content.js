@@ -295,7 +295,7 @@ export default class Content extends Component {
 
         offsets = document.getElementById('caretIndicator').getBoundingClientRect();
 
-        let offsetTop = 165;
+        let offsetTop = 225;
         let offsetLeft = offsets.left - ((window.innerWidth - ReactDOM.findDOMNode(this.refs.page).offsetWidth) / 2) + 15;
 
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop;

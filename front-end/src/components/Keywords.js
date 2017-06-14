@@ -1,23 +1,26 @@
 import React, {Component} from 'react';
 import {Label} from 'react-bootstrap';
 
-export default class Keyword extends Component {
+export default class Keywords extends Component {
 
     render() {
         return (
-            <div className="keywords">
+            <div>
                 {
-                    this.props.keywords.map(function (keyword, i) {
-                        return (
-                            <div className="one-label">
-                            <Label key={i} bsStyle="success">{ keyword }</Label>
-                            </div>
-                        );
-                    }, this)
+                    this.props.keywords.length ?
+                        <div className="keywords">
+                        {
+                            this.props.keywords.map(function (keyword, i) {
+                                return (
+                                    <div className="one-label" key={i}>
+                                        <Label bsStyle="success">{ keyword }</Label>
+                                    </div>
+                                );
+                            }, this)
+                        }
+                    </div> : null
                 }
             </div>
         );
     }
 }
-
-
