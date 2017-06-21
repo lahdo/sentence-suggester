@@ -25,8 +25,13 @@ export default class ImageGrid extends Component {
                                                     <Col md={3} mdOffset={3}>
                                                         <Thumbnail image={ firstImage }/>
                                                     </Col>
+
                                                     <Col md={3}>
-                                                        <Thumbnail image={ secondImage }/>
+                                                        {
+                                                            secondImage ?
+                                                                <Thumbnail image={ secondImage }/> :
+                                                                null
+                                                        }
                                                     </Col>
                                                 </Row>
                                             );

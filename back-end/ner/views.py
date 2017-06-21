@@ -11,7 +11,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from sentiment import analyzer
+from ner import analyzer
 
 
 class NERViewSet(APIView):
@@ -24,11 +24,11 @@ class NERViewSet(APIView):
 
         current_status = status.HTTP_200_OK
 
-        sentiments = analyzer.analyze(query)
+        result = analyzer.analyze(query)
 
         # try:
         #     sentiments = analyzer.analyze(query)
         # except:
         #     sentiments = []
 
-        return Response(sentiments, status=current_status)
+        return Response(result, status=current_status)

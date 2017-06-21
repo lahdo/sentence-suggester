@@ -9,52 +9,46 @@ const ENDPOINTS = {
     keywords: 'keywords/',
     jargons: 'jargons/',
     default_jargon: 'jargons/default',
+    entities: 'entities/',
 };
 
 function getApiAddress(endpoint) {
     return BASE + endpoint;
 }
 
-export function getSuggestions(searchObject) {
-    const endpoint = getApiAddress(ENDPOINTS['suggestions']);
-
+function fetchData(endpoint, searchObject) {
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     return fetch(`${endpoint}`, {
-            method: 'POST',
-            body: JSON.stringify(searchObject),
-            headers: myHeaders
-        }
-    )
+        method: 'POST',
+        body: JSON.stringify(searchObject),
+        headers: myHeaders
+    });
+}
+
+export function getSuggestions(searchObject) {
+    const endpoint = getApiAddress(ENDPOINTS['suggestions']);
+
+    return fetchData(endpoint, searchObject)
 }
 
 export function getKeywords(searchObject) {
     const endpoint = getApiAddress(ENDPOINTS['keywords']);
 
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    return fetch(`${endpoint}`, {
-            method: 'POST',
-            body: JSON.stringify(searchObject),
-            headers: myHeaders
-        }
-    )
+    return fetchData(endpoint, searchObject)
 }
 
 export function getSentiments(searchObject) {
     const endpoint = getApiAddress(ENDPOINTS['sentiment']);
 
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    return fetchData(endpoint, searchObject)
+}
 
-    return fetch(`${endpoint}`, {
-            method: 'POST',
-            body: JSON.stringify(searchObject),
-            headers: myHeaders
-        }
-    )
+export function getEntities(searchObject) {
+    const endpoint = getApiAddress(ENDPOINTS['entities']);
+
+    return fetchData(endpoint, searchObject)
 }
 
 export function getJargons() {

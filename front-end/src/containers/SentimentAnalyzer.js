@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 
 import TextInput from '../components/TextInput';
 import Sentences from '../components/Sentences';
-import * as api from '../utils/api.js'
+import * as api from '../utils/api.js';
+import * as utils from '../utils/sentimentsUtils';
 
 import styles from '../App.css';
 
@@ -21,6 +22,7 @@ export default class SentimentAnalyzer extends Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
         this.onClick = this.onClick.bind(this);
+        this.getGeneralScore = this.getGeneralScore.bind(this);
     }
 
     handleSearch(text) {
@@ -52,6 +54,27 @@ export default class SentimentAnalyzer extends Component {
         this.handleSearch(text);
     }
 
+    getGeneralScore(polarity, subjectivity) {
+        const [polarityRating, polarityResult] = utils.normalizePolarity(polarity);
+        let polarityValue = utils.normalizeValue(polarity);
+
+        const [subjectivityRating, subjectivityResult] = utils.normalizeSubjectivity(subjectivity);
+        let subjectivityValue = utils.normalizeValue(subjectivity);
+
+        return (
+            <div className="sentiment-overview">
+                <p>
+                    <strong>General text polarity: </strong>
+                    { polarityResult } ({ polarityValue })
+                </p>
+                <p>
+                    <strong>General text subjectivity: </strong>
+                    { subjectivityResult } ({ subjectivityValue })
+                </p>
+            </div>
+        );
+    }
+
     render() {
         console.log(styles);
         return (
@@ -77,7 +100,18 @@ export default class SentimentAnalyzer extends Component {
                     <Row>
                         <Col md={6} mdOffset={3}>
                             {
-                                this.state.sentiments.length ? <Sentences sentiments={this.state.sentiments}/> : null
+                                this.state.generalScore.polarity ?
+                                    this.getGeneralScore(this.state.generalScore.polarity, this.state.generalScore.subjectivity)
+                                    : null
+                            }
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6} mdOffset={3}>
+                            {
+                                this.state.sentiments.length ?
+                                    <Sentences sentiments={this.state.sentiments}/>
+                                    : null
                             }
                         </Col>
                     </Row>

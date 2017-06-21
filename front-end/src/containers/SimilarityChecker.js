@@ -40,7 +40,7 @@ export default class SimilarityChecker extends Component {
             response => response.json()
         ).then(
             data => {
-                this.setState({'sentiments': data['sentiments']});
+                this.setState({'sentiments': data['entities']});
                 this.setState({'generalScore': data['general_score']});
             }
         )
@@ -77,7 +77,7 @@ export default class SimilarityChecker extends Component {
                     <Row>
                         <Col md={6} mdOffset={3}>
                             {
-                                this.state.sentiments.length ? <Sentences sentiments={this.state.sentiments}/> : null
+                                this.state.entities.length ? <Sentences sentiments={this.state.entities}/> : null
                             }
                         </Col>
                     </Row>

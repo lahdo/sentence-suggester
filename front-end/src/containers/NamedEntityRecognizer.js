@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Button, Col, Grid, Row} from "react-bootstrap";
 import ReactDOM from 'react-dom';
-
+import Highlighter from 'react-highlight-words';
 import TextInput from '../components/TextInput';
-import Sentences from '../components/Sentences';
+// import EntityText from '../components/EntityText';
 import * as api from '../utils/api.js'
 
 import styles from '../App.css';
@@ -13,14 +13,15 @@ export default class NamedEntityRecognizer extends Component {
         super(props);
 
         this.state = {
-            generalScore: {},
-            sentiments: [],
+            entities: [],
+            selectedEntity: '',
             inputtedText: ''
         };
 
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
         this.onClick = this.onClick.bind(this);
+        this.onEntityButtonClick = this.onEntityButtonClick.bind(this);
     }
 
     handleSearch(text) {
@@ -30,18 +31,16 @@ export default class NamedEntityRecognizer extends Component {
             text: text
         };
 
-        this.setState({"sentiments": []});
-        this.setState({"generalScore": {}});
+        this.setState({"entities": []});
         this.doSearchRequest(searchObject);
     }
 
     doSearchRequest(searchObject) {
-        api.getSentiments(searchObject).then(
+        api.getEntities(searchObject).then(
             response => response.json()
         ).then(
             data => {
-                this.setState({'sentiments': data['sentiments']});
-                this.setState({'generalScore': data['general_score']});
+                this.setState({"entities": data});
             }
         )
     }
@@ -50,6 +49,10 @@ export default class NamedEntityRecognizer extends Component {
         let text = ReactDOM.findDOMNode(this.refs.textForKeywords).textContent;
         this.setState({"inputtedText": text});
         this.handleSearch(text);
+    }
+
+    onEntityButtonClick(e, entity) {
+        this.setState({"selectedEntity": entity});
     }
 
     render() {
@@ -69,7 +72,7 @@ export default class NamedEntityRecognizer extends Component {
                             <div className={ styles.styleSelector }>
                                 <Button bsStyle="primary"
                                         onClick={this.onClick}>
-                                    Analyze Sentiment
+                                    Analyze Entities
                                 </Button>
                             </div>
                         </Col>
@@ -77,8 +80,33 @@ export default class NamedEntityRecognizer extends Component {
                     <Row>
                         <Col md={6} mdOffset={3}>
                             {
-                                this.state.sentiments.length ? <Sentences sentiments={this.state.sentiments}/> : null
+                                Object.keys(this.state.entities).map((entity) => {
+                                    return (
+                                        <Button bsStyle="secondary"
+                                                className="entityButton"
+                                                onClick={ (e) => this.onEntityButtonClick(e, entity)}>
+                                            { entity }
+                                        </Button>
+                                    );
+                                })
                             }
+                        </Col>
+
+                    </Row>
+                    <Row>
+                        <Col md={6} mdOffset={3}>
+                            <div className="entityText">
+                                {
+                                    Object.keys(this.state.entities).length ?
+                                        <Highlighter
+                                            className=""
+                                            highlightClassName='entityHighlight'
+                                            searchWords={ this.state.selectedEntity ? this.state.entities[this.state.selectedEntity] : [] }
+                                            textToHighlight={ this.state.inputtedText }
+                                        />
+                                        : null
+                                }
+                            </div>
                         </Col>
                     </Row>
                     <Row>

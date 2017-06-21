@@ -23,11 +23,13 @@ from sentiment.views import SentimentViewSet
 from suggestions.views import SuggestionsViewSet
 from suggestions.views import JargonsViewSet
 from suggestions.views import DefaultJargonViewSet
+from ner.views import NERViewSet
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 
 urlpatterns = [
+    url(r'^api/v1/entities', NERViewSet.as_view()),
     url(r'^api/v1/sentiment', SentimentViewSet.as_view()),
     url(r'^api/v1/keywords', KeywordsViewSet.as_view()),
     url(r'^api/v1/suggestions', SuggestionsViewSet.as_view()),

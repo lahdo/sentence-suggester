@@ -218,7 +218,7 @@ span.label {
 }
 
 table {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 table th {
@@ -253,4 +253,26 @@ table th.sentiment-number-header {
 
 .sentiment-sentence.sentiment-number {
     text-align: center;
+}
+
+.sentiment-overview {
+    font-size: 20px;
+    margin: 20px 0;
+}
+
+.entityHighlight {
+    background-color: yellow;
+}
+
+.entityButton {
+    margin: 15px 10px 15px 0;
+}
+
+.entityText {
+    text-align: justify;
+    font-size: 26px;
+    margin: 15px 0;
+    background-color: #e0e0e0;
+    border: 2px solid #cccbcb;
+    padding: 10px;
 }
