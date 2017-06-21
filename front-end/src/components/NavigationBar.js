@@ -30,6 +30,16 @@ export default class NavigationBar extends Component {
                                 <strong>Sentiment Analyzer</strong>
                             </LinkContainer>
                         </NavItem>
+                        <NavItem>
+                            <LinkContainer to="/similarity-checker">
+                                <strong>Similarity Checker</strong>
+                            </LinkContainer>
+                        </NavItem>
+                        <NavItem>
+                            <LinkContainer to="/named-entity-recognizer">
+                                <strong>Named Entity Recognizer</strong>
+                            </LinkContainer>
+                        </NavItem>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

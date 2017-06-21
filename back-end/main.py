@@ -163,6 +163,19 @@ def gensim_keywords():
     pos_filter = ['JJ', 'CC', 'CD', 'DT', 'JJ', 'EX', 'RB', 'WRB', 'WP$', 'WP', 'VB']
     print(keywords(text, ratio=0.1, pos_filter=pos_filter, split=True))
 
+
+def ner():
+    import spacy
+    en_nlp = spacy.load('en')
+    en_doc = en_nlp(u'Donald John Trump (born June 14, 1946) is the 45th and current President of the United States. Before entering politics, he was a businessman and television personality. '
+                    u'Trump was born and raised in Queens, New York City, and earned an economics degree from the Wharton School. Later, he took charge of The Trump Organization, the real estate and construction firm founded by his paternal grandmother, which he ran for 45 years until 2016. During his real estate career, Trump built, renovated, and managed numerous office towers, hotels, casinos, and golf courses. Besides real estate, he started several side ventures and has licensed the use of his name for the branding of various products and properties. He produced and hosted The Apprentice, a reality television series on NBC, from 2004 to 2015. His net worth was estimated to be $3.5 billion as of 2017, making him the 544th richest person in the world.'
+                    u'Trump first publicly expressed interest in running for political office in 1987. He won two Reform Party presidential primaries in 2000, but withdrew his candidacy early on. In June 2015, he launched his campaign for the 2016 presidential election and quickly emerged as the front-runner among seventeen candidates in the Republican primaries. His remaining opponents all suspended their campaigns by the end of May 2016, and in July he was formally nominated at the Republican National Convention along with Indiana governor Mike Pence as his running mate. His campaign received extensive media coverage. Many of his public statements were controversial or false. Trump won the general election on November 8, 2016, in a surprise victory against Democratic opponent Hillary Clinton, and commenced his presidency on January 20, 2017. He became the oldest and wealthiest person ever to assume the presidency, the first without prior military or government service, and the fifth to have won election while losing the popular vote. His political positions have been described by scholars and commentators as populist, protectionist, and nationalist.')
+
+    for ent in en_doc.ents:
+        print(ent.text + ' ' + ent.label_)
+        # if ent.label_ == 'PRODUCT':
+            # yield ent
+
 # smoke_test()
 # prepare_model("./models/raw/sherlock.txt", "./models/sherlock_corpus.json")
 # prepare_model("./models/news3.txt", "./models/news_corpus.json")
@@ -181,5 +194,6 @@ def gensim_keywords():
 # prepare_books_redis_models()
 # prepare_books_redis_letter_model()
 # test_autocomplete('without','the')
-gensim_keywords()
+# gensim_keywords()
 # prepare_books_redis_models(4)
+ner()

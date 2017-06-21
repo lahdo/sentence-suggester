@@ -9,7 +9,6 @@ def analyze(query):
     blob = TextBlob(text)
 
     for sentence in blob.sentences:
-
         sentiments.append({
             "sentence": str(sentence),
             "sentiment": sentence.sentiment
@@ -20,4 +19,9 @@ def analyze(query):
         "subjectivity": 0
     }
 
-    return { sentiments, general_score }
+    result = {
+        "sentiments": sentiments,
+        "general_score": general_score
+    }
+
+    return result

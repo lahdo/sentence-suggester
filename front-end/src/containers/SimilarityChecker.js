@@ -8,7 +8,7 @@ import * as api from '../utils/api.js'
 
 import styles from '../App.css';
 
-export default class SentimentAnalyzer extends Component {
+export default class SimilarityChecker extends Component {
     constructor(props) {
         super(props);
 
@@ -60,7 +60,7 @@ export default class SentimentAnalyzer extends Component {
                     <Row>
                         <Col md={6} mdOffset={3}>
                             <h1 className={ styles.appTitle }>
-                                Sentiment Analyzer
+                                Similarity Checker
                             </h1>
                         </Col>
                     </Row>

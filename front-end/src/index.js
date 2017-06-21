@@ -6,6 +6,8 @@ import AppsView from "./containers/AppsView";
 import SentenceSuggester from './containers/SentenceSuggester.js';
 import KeywordExtractor from './containers/KeywordExtractor.js';
 import SentimentAnalyzer from './containers/SentimentAnalyzer.js';
+import SimilarityChecker from './containers/SimilarityChecker.js';
+import NamedEntityRecognizer from './containers/NamedEntityRecognizer.js';
 
 import Layout from "./components/Layout";
 import NavigationBar from "./components/NavigationBar";
@@ -32,6 +34,12 @@ ReactDOM.render((
                 <Route name="keywordsExtractor"
                        path="/keywords-extractor"
                        component={KeywordExtractor}/>
+                <Route name="similarityChecker"
+                       path="/similarity-checker"
+                       component={SimilarityChecker}/>
+                <Route name="NamedEntityRecognizer"
+                       path="/named-entity-recognizer"
+                       component={NamedEntityRecognizer}/>
                 <Footer />
             </Layout>
         </Router>

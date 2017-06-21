@@ -121,7 +121,7 @@ export default class Sentences extends Component {
                         return (
                             <tr key={i}>
                                 <td>
-                                    <p className="sentiment-sentence">{ i+1 }</p>
+                                    <p className="sentiment-sentence sentiment-number">{ i+1 }</p>
                                 </td>
                                 <td>
                                     <p className="sentiment-sentence">{ item.sentence }</p>
