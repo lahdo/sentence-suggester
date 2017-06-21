@@ -50,30 +50,37 @@ export default class SentimentAnalyzer extends Component {
     }
 
     render() {
+        console.log(styles);
         return (
             <div >
-                <Grid>
-                    <Row>
-                        <Col md={6} mdOffset={3}>
-                            <h1 className={ styles.appTitle }>
-                                Sentiment Analyzer
-                            </h1>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6} mdOffset={3}>
-                            <div className={ styles.styleSelector }>
-                                <Button bsStyle="primary"
-                                        onClick={this.onClick}>
-                                    Analyze Sentiment
-                                </Button>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Sentences sentiments={this.state.sentiments} />
-                    <Row>
-                        <Col md={6} mdOffset={3}>
-                            <TextInput ref="textForKeywords"/>
+              <Grid>
+                <Row>
+                  <Col md={6} mdOffset={3}>
+                    <h1 className={ styles.appTitle }>
+                      Sentiment Analyzer
+                    </h1>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={6} mdOffset={3}>
+                    <div className={ styles.styleSelector }>
+                      <Button bsStyle="primary"
+                        onClick={this.onClick}>
+                        Analyze Sentiment
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={6} mdOffset={3}>
+                      {
+                          this.state.sentiments.length ? <Sentences sentiments={this.state.sentiments} /> : null
+                      }
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={6} mdOffset={3}>
+                    <TextInput ref="textForKeywords"/>
                         </Col>
                     </Row>
                 </Grid>

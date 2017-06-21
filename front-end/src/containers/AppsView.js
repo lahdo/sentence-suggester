@@ -1,13 +1,41 @@
 import React, {Component} from 'react';
 
-import '../App.css';
-import {Col, Grid, Panel, Row} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import Apps from '../components/Apps';
 
+import '../App.css';
+import {Col, Grid, Row} from "react-bootstrap";
 
 export default class AppsView extends Component {
     constructor(props) {
         super(props);
+
+        this.apps = [
+            {
+                name: 'Sentence Suggester',
+                description: 'Write 10 times faster thanks to Markov Chain like model',
+                link: 'sentence-suggester'
+            },
+            {
+                name: 'Keywords Extractor',
+                description: 'Extract the most probable keywords for the given text',
+                link: 'keywords-extractor'
+            },
+            {
+                name: 'Sentiment Analyzer',
+                description: 'Analyze sentiment of each sentence in your text',
+                link: 'sentiment-analyzer'
+            },
+            {
+                name: 'Similarity Checker',
+                description: 'Check how similar are two given texts',
+                link: 'similarity-checker'
+            },
+            {
+                name: 'Named Entity Recognizer',
+                description: 'Find names of persons, organizations, locations, expressions of times etc.',
+                link: 'named-entity-recognizer'
+            },
+        ];
 
         this.state = {};
     }
@@ -21,34 +49,7 @@ export default class AppsView extends Component {
                             <h1 className="appTitle">Text Tools</h1>
                         </Col>
                     </Row>
-
-                    <Row>
-                        <Col md={3} mdOffset={3}>
-                            <Panel >
-                                <Link to="sentence-suggester">Sentence Suggester</Link>
-                                <br/>
-                                <span>Write 10 times faster thanks to Markov Chain like model</span>
-                            </Panel>
-                        </Col>
-                        <Col md={3}>
-                            <Panel >
-                                <Link to="keywords-extractor">Keywords Extractor</Link>
-                                <br/>
-                                <span>Extract the most probable keywords for the given text</span>
-                            </Panel>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={3} mdOffset={3}>
-                            <Panel >
-                                <Link to="sentiment-analyzer">Sentiment Analyzer</Link>
-                                <br/>
-                                <span>Analyze sentiment of each sentence in your text</span>
-                            </Panel>
-                        </Col>
-                        <Col md={3}>
-                        </Col>
-                    </Row>
+                    <Apps apps={this.apps}/>
                 </Grid>
             </div>
         );

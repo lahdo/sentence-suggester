@@ -15,9 +15,6 @@ def analyze(query):
             "sentiment": sentence.sentiment
         })
 
-    general_score = {
-        "polarity": 0,
-        "subjectivity": 0
-    }
+        print(sentence.sentiment)
 
-    return { sentiments, general_score }
+    return sentiments

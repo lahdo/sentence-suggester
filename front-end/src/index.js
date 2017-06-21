@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 
 import './index.css';
 import './bootstrap.css';
+import 'font-awesome/css/font-awesome.css';
 
 ReactDOM.render((
         <Router>

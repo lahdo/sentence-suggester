@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 
-import {Thumbnail, Label} from "react-bootstrap";
+import {Thumbnail, Label} from 'react-bootstrap';
 
 export default class CustomThumbnail extends Component {
     constructor(props) {
         super(props);
 
-        this.unsplash = "https://unsplash.com/";
-        this.utm = "?utm_source=elfinite&utm_medium=referral&utm_campaign=api-credit";
+        this.unsplash = 'https://unsplash.com/';
+        this.utm = '?utm_source=elfinite&utm_medium=referral&utm_campaign=api-credit';
 
         this.downloadImage = this.downloadImage.bind(this);
         this.getUserNameAndSurname = this.getUserNameAndSurname.bind(this);
@@ -39,17 +39,17 @@ export default class CustomThumbnail extends Component {
             <div>
                 <p>
                     <span>Photo by: </span>
-                    <a target="_blank"
+                    <a target='_blank'
                        href={ this.getImageLink(image) }>
                         { this.getUserNameAndSurname(image) }
                     </a>
                     <span> / </span>
-                    <a target="_blank"
+                    <a target='_blank'
                        href={ this.getUnsplashLink() }>
                         Unsplash
                     </a>
                 </p>
-                <Label bsStyle="success">{ image.keyword }</Label>
+                <Label bsStyle='success'>{ image.keyword }</Label>
             </div>
         );
     }

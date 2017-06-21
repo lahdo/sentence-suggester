@@ -37,7 +37,7 @@ nav.nav-bar .navbar-brand {
     color: white;
 }
 
-h1.appTitle  {
+h1.appTitle {
     margin-bottom: 15px;
 }
 
@@ -98,12 +98,12 @@ h1.appTitle  {
 }
 
 /*.sentences :hover {*/
-    /*color: white;*/
-    /*background: #00ae84;*/
-    /*border-radius: 2px;*/
+/*color: white;*/
+/*background: #00ae84;*/
+/*border-radius: 2px;*/
 /*}*/
 
-.sentences .selection{
+.sentences .selection {
     color: white;
     background: #00ae84;
 }
@@ -144,6 +144,7 @@ h1.appTitle  {
 .word {
     display: inline-block;
 }
+
 .words {
     display: inline-block;
 }
@@ -162,8 +163,9 @@ h1.appTitle  {
     -khtml-user-select: none; /* Konqueror HTML */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                     supported by Chrome and Opera */
 }
 
 span.label {
@@ -190,4 +192,61 @@ span.label {
 
 .thumbnail > img, .thumbnail a > img {
     width: 100%;
+}
+
+.sentiment-icon-positive, .sentiment-icon-neutral {
+    color: #4582ec;
+}
+
+.sentiment-icon-objective, .sentiment-icon-neutral {
+    color: #4582ec;
+}
+
+.sentiment-icon-negative {
+    color: #ffb42c;
+}
+
+.sentiment-icon-subjective {
+    color: #ffb42c;
+}
+
+.sentiment-sentence {
+    margin: 5px 5px;
+    text-align: left;
+    font-family: "Computer Modern Serif", serif;
+    font-size: 22px;
+}
+
+table {
+    margin-top: 20px;
+}
+
+table th {
+    min-width: 110px;
+}
+
+table td {
+    text-align: center;
+}
+
+table th {
+    background-color: white;
+    color: #00ae84;
+    font-size: 20px;
+}
+
+.table.table-condensed > thead > tr > th {
+    padding: 10px;
+}
+
+.table.table-striped > tbody > tr:nth-of-type(even) {
+    background-color: #e7edf9;
+}
+
+.table.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: white;
+}
+
+table th.sentiment-number-header {
+    min-width: initial;
 }
