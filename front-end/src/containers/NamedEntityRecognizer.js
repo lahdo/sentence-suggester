@@ -7,6 +7,7 @@ import TextInput from '../components/TextInput';
 import * as api from '../utils/api.js'
 
 import styles from '../App.css';
+import EntityButtons from "../components/EntityButtons";
 
 export default class NamedEntityRecognizer extends Component {
     constructor(props) {
@@ -79,34 +80,24 @@ export default class NamedEntityRecognizer extends Component {
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            {
-                                Object.keys(this.state.entities).map((entity) => {
-                                    return (
-                                        <Button bsStyle="secondary"
-                                                className="entityButton"
-                                                onClick={ (e) => this.onEntityButtonClick(e, entity)}>
-                                            { entity }
-                                        </Button>
-                                    );
-                                })
-                            }
+                            <EntityButtons entities={ this.state.entities }
+                                           onEntityButtonClick={ this.onEntityButtonClick }/>
                         </Col>
-
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <div className="entityText">
-                                {
-                                    Object.keys(this.state.entities).length ?
+                            {
+                                Object.keys(this.state.entities).length ?
+                                    <div className="entityText">
                                         <Highlighter
                                             className=""
                                             highlightClassName='entityHighlight'
                                             searchWords={ this.state.selectedEntity ? this.state.entities[this.state.selectedEntity] : [] }
                                             textToHighlight={ this.state.inputtedText }
                                         />
-                                        : null
-                                }
-                            </div>
+                                    </div>
+                                    : null
+                            }
                         </Col>
                     </Row>
                     <Row>

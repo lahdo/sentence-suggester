@@ -262,17 +262,32 @@ table th.sentiment-number-header {
 
 .entityHighlight {
     background-color: yellow;
+     padding: .1em;
 }
 
 .entityButton {
-    margin: 15px 10px 15px 0;
+    /*margin: 15px 10px 15px 0;*/
+    margin: 5px 5px 0 0;
+}
+
+button.entityButton.btn.btn-default {
+    outline: 0;
+}
+
+.entityButtons {
+    margin-top: 15px;
 }
 
 .entityText {
     text-align: justify;
     font-size: 26px;
     margin: 15px 0;
-    background-color: #e0e0e0;
-    border: 2px solid #cccbcb;
-    padding: 10px;
+    background-color: #f1f1f1;
+    border: 2px solid #8e8e8e;
+    padding: 20px 20px;
+    font-family: "Computer Modern Serif", serif;
+}
+
+.btn {
+    outline: 0;
 }
