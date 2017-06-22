@@ -27,13 +27,28 @@ export default class AppsView extends Component {
             },
             {
                 name: 'Similarity Checker',
-                description: 'Check how similar are two given texts',
+                description: 'Check how similar are two given texts.',
                 link: 'similarity-checker'
             },
             {
                 name: 'Named Entity Recognizer',
-                description: 'Find names of persons, organizations, locations, expressions of times etc.',
+                description: 'Find names of persons, organizations, locations etc.',
                 link: 'named-entity-recognizer'
+            },
+            {
+                name: 'Text Statistics',
+                description: 'Count number of sentences, characters, words and letters',
+                link: 'text-statistics'
+            },
+            {
+                name: 'Text Summarizer',
+                description: 'Summarize text based on the most important sentences',
+                link: 'text-summarizer'
+            },
+            {
+                name: 'Content Enricher',
+                description: 'Enrich your text with a content from wikipedia',
+                link: 'content-enricher'
             },
         ];
 

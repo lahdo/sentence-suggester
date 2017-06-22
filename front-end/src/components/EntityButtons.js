@@ -25,6 +25,7 @@ export default class EntityButtons extends Component {
             ORDINAL: 'Ordinal Numerals',
             CARDINAL: 'Other Numerals',
             FAC: 'FAC',
+            LAW: 'LAW',
         }
 
     }

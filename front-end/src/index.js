@@ -8,6 +8,8 @@ import KeywordExtractor from './containers/KeywordExtractor.js';
 import SentimentAnalyzer from './containers/SentimentAnalyzer.js';
 import SimilarityChecker from './containers/SimilarityChecker.js';
 import NamedEntityRecognizer from './containers/NamedEntityRecognizer.js';
+import TextSummarizer from './containers/TextSummarizer.js';
+import ContentEnricher from './containers/ContentEnricher.js';
 
 import Layout from "./components/Layout";
 import NavigationBar from "./components/NavigationBar";
@@ -40,6 +42,12 @@ ReactDOM.render((
                 <Route name="NamedEntityRecognizer"
                        path="/named-entity-recognizer"
                        component={NamedEntityRecognizer}/>
+                <Route name="TextSummarizer"
+                       path="/text-summarizer"
+                       component={TextSummarizer}/>
+                <Route name="ContentEnricher"
+                       path="/content-enricher"
+                       component={ContentEnricher}/>
                 <Footer />
             </Layout>
         </Router>

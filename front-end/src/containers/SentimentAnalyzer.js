@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 
 import TextInput from '../components/TextInput';
 import Sentences from '../components/Sentences';
+import Spinner from "../components/Spinner";
+
 import * as api from '../utils/api.js';
 import * as utils from '../utils/sentimentsUtils';
 
@@ -16,7 +18,8 @@ export default class SentimentAnalyzer extends Component {
         this.state = {
             generalScore: {},
             sentiments: [],
-            inputtedText: ''
+            inputtedText: '',
+            showSpinner: false
         };
 
         this.handleSearch = this.handleSearch.bind(this);
@@ -38,12 +41,14 @@ export default class SentimentAnalyzer extends Component {
     }
 
     doSearchRequest(searchObject) {
-        api.getSentiments(searchObject).then(
+        this.setState({"showSpinner": true});
+        api.fetchSentiments(searchObject).then(
             response => response.json()
         ).then(
             data => {
                 this.setState({'sentiments': data['sentiments']});
                 this.setState({'generalScore': data['general_score']});
+                this.setState({"showSpinner": false});
             }
         )
     }
@@ -78,7 +83,8 @@ export default class SentimentAnalyzer extends Component {
     render() {
         console.log(styles);
         return (
-            <div >
+            <div>
+                <Spinner showSpinner={ this.state.showSpinner } />
                 <Grid>
                     <Row>
                         <Col md={6} mdOffset={3}>

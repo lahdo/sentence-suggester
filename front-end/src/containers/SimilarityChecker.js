@@ -15,7 +15,8 @@ export default class SimilarityChecker extends Component {
         this.state = {
             generalScore: {},
             sentiments: [],
-            inputtedText: ''
+            inputtedFirstText: '',
+            inputtedSecondText: ''
         };
 
         this.handleSearch = this.handleSearch.bind(this);
@@ -23,11 +24,13 @@ export default class SimilarityChecker extends Component {
         this.onClick = this.onClick.bind(this);
     }
 
-    handleSearch(text) {
-        this.setState({'inputtedText': text});
+    handleSearch(firstText, secondText) {
+        this.setState({"inputtedFirstText": firstText});
+        this.setState({"inputtedSecondText": secondText});
 
         const searchObject = {
-            text: text
+            firstText: firstText,
+            secondText: secondText
         };
 
         this.setState({"sentiments": []});
@@ -36,7 +39,7 @@ export default class SimilarityChecker extends Component {
     }
 
     doSearchRequest(searchObject) {
-        api.getSentiments(searchObject).then(
+        api.fetchSentiments(searchObject).then(
             response => response.json()
         ).then(
             data => {
@@ -47,9 +50,11 @@ export default class SimilarityChecker extends Component {
     }
 
     onClick() {
-        let text = ReactDOM.findDOMNode(this.refs.textForKeywords).textContent;
-        this.setState({"inputtedText": text});
-        this.handleSearch(text);
+        let firstText = ReactDOM.findDOMNode(this.refs.firstText).textContent;
+        let secondText = ReactDOM.findDOMNode(this.refs.secondText).textContent;
+        this.setState({"inputtedFirstText": firstText});
+        this.setState({"inputtedSecondText": secondText});
+        this.handleSearch(firstText, secondText);
     }
 
     render() {
@@ -77,13 +82,18 @@ export default class SimilarityChecker extends Component {
                     <Row>
                         <Col md={6} mdOffset={3}>
                             {
-                                this.state.entities.length ? <Sentences sentiments={this.state.entities}/> : null
+                                this.state.sentiments.length ? <Sentences sentiments={this.state.entities}/> : null
                             }
                         </Col>
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <TextInput ref="textForKeywords"/>
+                            <h3>First Text:</h3>
+                            <TextInput ref="firstText"/>
+                        </Col>
+                        <Col md={6} mdOffset={3}>
+                            <h3>Second Text:</h3>
+                            <TextInput ref="secondText"/>
                         </Col>
                     </Row>
                 </Grid>

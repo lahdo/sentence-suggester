@@ -44,7 +44,7 @@ export default class KeywordExtractor extends Component {
     }
 
     doSearchRequest(searchObject) {
-        api.getKeywords(searchObject).then(
+        api.fetchKeywords(searchObject).then(
             response => response.json()
         ).then(
             keywords => {

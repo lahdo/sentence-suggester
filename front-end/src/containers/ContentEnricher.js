@@ -3,26 +3,22 @@ import {Button, Col, Grid, Row} from "react-bootstrap";
 import ReactDOM from 'react-dom';
 import Highlighter from 'react-highlight-words';
 import TextInput from '../components/TextInput';
-// import EntityText from '../components/EntityText';
 import * as api from '../utils/api.js'
 
 import styles from '../App.css';
-import EntityButtons from "../components/EntityButtons";
 
-export default class NamedEntityRecognizer extends Component {
+export default class ContentEnricher extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            entities: [],
-            selectedEntity: '',
+            summary: '',
             inputtedText: ''
         };
 
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
         this.onClick = this.onClick.bind(this);
-        this.onEntityButtonClick = this.onEntityButtonClick.bind(this);
     }
 
     handleSearch(text) {
@@ -32,7 +28,7 @@ export default class NamedEntityRecognizer extends Component {
             text: text
         };
 
-        this.setState({"entities": []});
+        this.setState({"summary": ''});
         this.doSearchRequest(searchObject);
     }
 
@@ -41,7 +37,7 @@ export default class NamedEntityRecognizer extends Component {
             response => response.json()
         ).then(
             data => {
-                this.setState({"entities": data});
+                this.setState({"summary": data});
             }
         )
     }
@@ -52,10 +48,6 @@ export default class NamedEntityRecognizer extends Component {
         this.handleSearch(text);
     }
 
-    onEntityButtonClick(e, entity) {
-        this.setState({"selectedEntity": entity});
-    }
-
     render() {
         return (
             <div >
@@ -63,7 +55,7 @@ export default class NamedEntityRecognizer extends Component {
                     <Row>
                         <Col md={6} mdOffset={3}>
                             <h1 className={ styles.appTitle }>
-                                Named Entity Recognizer
+                                Content Enricher
                             </h1>
                         </Col>
                     </Row>
@@ -72,26 +64,20 @@ export default class NamedEntityRecognizer extends Component {
                             <div className={ styles.styleSelector }>
                                 <Button bsStyle="primary"
                                         onClick={this.onClick}>
-                                    Analyze Entities
+                                    Enrich Content
                                 </Button>
                             </div>
                         </Col>
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <EntityButtons entities={ this.state.entities }
-                                           onEntityButtonClick={ this.onEntityButtonClick }/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6} mdOffset={3}>
                             {
-                                Object.keys(this.state.entities).length ?
+                                this.state.summary.length ?
                                     <div className="entityText">
                                         <Highlighter
                                             className=""
                                             highlightClassName='entityHighlight'
-                                            searchWords={ this.state.selectedEntity ? this.state.entities[this.state.selectedEntity] : [] }
+                                            searchWords={ [] }
                                             textToHighlight={ this.state.inputtedText }
                                         />
                                     </div>

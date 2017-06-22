@@ -92,7 +92,7 @@ export default class SentenceSuggester extends Component {
     }
 
     doSearchRequest(searchObject) {
-        api.getSuggestions(searchObject).then(
+        api.fetchSuggestions(searchObject).then(
             response => response.json()
         ).then(
             suggestions => {

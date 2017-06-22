@@ -27,29 +27,18 @@ function fetchData(endpoint, searchObject) {
     });
 }
 
-export function getSuggestions(searchObject) {
-    const endpoint = getApiAddress(ENDPOINTS['suggestions']);
+function makeRequest(endpoint) {
+    return function(searchObject) {
+        const url = getApiAddress(endpoint);
 
-    return fetchData(endpoint, searchObject)
+        return fetchData(url, searchObject)
+    };
 }
 
-export function getKeywords(searchObject) {
-    const endpoint = getApiAddress(ENDPOINTS['keywords']);
-
-    return fetchData(endpoint, searchObject)
-}
-
-export function getSentiments(searchObject) {
-    const endpoint = getApiAddress(ENDPOINTS['sentiment']);
-
-    return fetchData(endpoint, searchObject)
-}
-
-export function getEntities(searchObject) {
-    const endpoint = getApiAddress(ENDPOINTS['entities']);
-
-    return fetchData(endpoint, searchObject)
-}
+export const fetchSuggestions = makeRequest(ENDPOINTS['suggestions']);
+export const fetchKeywords = makeRequest(ENDPOINTS['keywords']);
+export const fetchSentiments = makeRequest(ENDPOINTS['sentiment']);
+export const fetchEntities = makeRequest(ENDPOINTS['entities']);
 
 export function getJargons() {
     const endpoint = getApiAddress(ENDPOINTS['jargons']);
