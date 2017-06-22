@@ -8,8 +8,10 @@ const ENDPOINTS = {
     sentiment: 'sentiment/',
     keywords: 'keywords/',
     jargons: 'jargons/',
-    default_jargon: 'jargons/default',
+    defaultJargon: 'jargons/default',
     entities: 'entities/',
+    summary: 'summary/',
+    contentEnrichment: 'content-enrichment/',
 };
 
 function getApiAddress(endpoint) {
@@ -39,6 +41,8 @@ export const fetchSuggestions = makeRequest(ENDPOINTS['suggestions']);
 export const fetchKeywords = makeRequest(ENDPOINTS['keywords']);
 export const fetchSentiments = makeRequest(ENDPOINTS['sentiment']);
 export const fetchEntities = makeRequest(ENDPOINTS['entities']);
+export const fetchSummary = makeRequest(ENDPOINTS['summary']);
+export const fetchContentEnrichment = makeRequest(ENDPOINTS['contentEnrichment']);
 
 export function getJargons() {
     const endpoint = getApiAddress(ENDPOINTS['jargons']);
@@ -47,7 +51,7 @@ export function getJargons() {
 }
 
 export function getDefaultJargon() {
-    const endpoint = getApiAddress(ENDPOINTS['default_jargon']);
+    const endpoint = getApiAddress(ENDPOINTS['defaultJargon']);
 
     return fetch(`${endpoint}`)
 }

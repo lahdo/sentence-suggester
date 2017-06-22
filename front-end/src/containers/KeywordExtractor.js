@@ -6,6 +6,7 @@ import Unsplash from 'unsplash-js';
 import TextInput from '../components/TextInput';
 import Keywords from '../components/Keywords';
 import ImageGrid from '../components/ImageGrid';
+import Spinner from "../components/Spinner";
 import * as api from '../utils/api.js'
 import {unsplashConfig} from '../constants.js';
 
@@ -44,12 +45,13 @@ export default class KeywordExtractor extends Component {
     }
 
     doSearchRequest(searchObject) {
+        this.setState({"showSpinner": true});
         api.fetchKeywords(searchObject).then(
             response => response.json()
         ).then(
             keywords => {
                 this.setState({'keywords': keywords});
-                keywords.slice(0, this.maxKeywords).map(keyword => {
+                return keywords.slice(0, this.maxKeywords).map(keyword => {
                         this.getImages(keyword);
                     }
                 )
@@ -62,8 +64,10 @@ export default class KeywordExtractor extends Component {
 
         this.unsplash.search.photos(keyword, pageNumber)
             .then(response => response.json())
-            .then(data =>
-                this.setImages(data.results, keyword)
+            .then(data => {
+                    this.setState({"showSpinner": false}); //WRONG PLACE!!!
+                    return this.setImages(data.results, keyword);
+                }
             );
     }
 
@@ -71,9 +75,9 @@ export default class KeywordExtractor extends Component {
         images.forEach((image) =>
             image.keyword = keyword
         );
-        this.setState({ "images": this.state.images.concat(images) });
+        this.setState({"images": this.state.images.concat(images)});
 
-        if(images.length) {
+        if (images.length) {
             this.setState({"haveResults": true})
         }
         else {
@@ -89,7 +93,8 @@ export default class KeywordExtractor extends Component {
 
     render() {
         return (
-            <div >
+            <div>
+                <Spinner showSpinner={ this.state.showSpinner }/>
                 <Grid>
                     <Row>
                         <Col md={6} mdOffset={3}>

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, Col, Grid, Row} from "react-bootstrap";
 import ReactDOM from 'react-dom';
 
+import Spinner from "../components/Spinner";
 import TextInput from '../components/TextInput';
 import Sentences from '../components/Sentences';
 import * as api from '../utils/api.js'
@@ -16,7 +17,8 @@ export default class SimilarityChecker extends Component {
             generalScore: {},
             sentiments: [],
             inputtedFirstText: '',
-            inputtedSecondText: ''
+            inputtedSecondText: '',
+            showSpinner: false
         };
 
         this.handleSearch = this.handleSearch.bind(this);
@@ -39,12 +41,14 @@ export default class SimilarityChecker extends Component {
     }
 
     doSearchRequest(searchObject) {
+        this.setState({"showSpinner": true});
         api.fetchSentiments(searchObject).then(
             response => response.json()
         ).then(
             data => {
                 this.setState({'sentiments': data['entities']});
                 this.setState({'generalScore': data['general_score']});
+                this.setState({"showSpinner": false});
             }
         )
     }
@@ -60,7 +64,8 @@ export default class SimilarityChecker extends Component {
     render() {
         console.log(styles);
         return (
-            <div >
+            <div>
+                <Spinner showSpinner={ this.state.showSpinner } />
                 <Grid>
                     <Row>
                         <Col md={6} mdOffset={3}>

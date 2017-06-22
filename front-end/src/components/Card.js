@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {findIndex} from 'lodash';
 
 export default class Card extends Component {
     constructor(props) {

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-// import * as SentenceParser from '../lib/SentenceParser';
 
 export default class Page extends Component {
     constructor(props) {

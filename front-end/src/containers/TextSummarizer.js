@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {Button, Col, Grid, Row} from "react-bootstrap";
 import ReactDOM from 'react-dom';
-import Highlighter from 'react-highlight-words';
+
 import TextInput from '../components/TextInput';
+import Spinner from "../components/Spinner";
 import * as api from '../utils/api.js'
 
 import styles from '../App.css';
@@ -12,9 +13,12 @@ export default class TextSummarizer extends Component {
         super(props);
 
         this.state = {
-            summary: '',
-            inputtedText: ''
+            summary: [],
+            inputtedText: '',
+            showSpinner: false
         };
+
+        this.numberOfSentences = 5;
 
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
@@ -25,7 +29,8 @@ export default class TextSummarizer extends Component {
         this.setState({'inputtedText': text});
 
         const searchObject = {
-            text: text
+            text: text,
+            numberOfSentences: this.numberOfSentences
         };
 
         this.setState({"summary": ''});
@@ -33,11 +38,13 @@ export default class TextSummarizer extends Component {
     }
 
     doSearchRequest(searchObject) {
-        api.fetchEntities(searchObject).then(
+        this.setState({"showSpinner": true});
+        api.fetchSummary(searchObject).then(
             response => response.json()
         ).then(
             data => {
                 this.setState({"summary": data});
+                this.setState({"showSpinner": false});
             }
         )
     }
@@ -51,6 +58,7 @@ export default class TextSummarizer extends Component {
     render() {
         return (
             <div >
+                <Spinner showSpinner={ this.state.showSpinner } />
                 <Grid>
                     <Row>
                         <Col md={6} mdOffset={3}>
@@ -73,13 +81,14 @@ export default class TextSummarizer extends Component {
                         <Col md={6} mdOffset={3}>
                             {
                                 this.state.summary.length ?
-                                    <div className="entityText">
-                                        <Highlighter
-                                            className=""
-                                            highlightClassName='entityHighlight'
-                                            searchWords={ [] }
-                                            textToHighlight={ this.state.inputtedText }
-                                        />
+                                    <div className="entityText summary">
+                                        <ul>
+                                            {
+                                                this.state.summary.map((sentence, i) => {
+                                                    return(<li key={ i }>{ sentence }</li>);
+                                                })
+                                            }
+                                        </ul>
                                     </div>
                                     : null
                             }

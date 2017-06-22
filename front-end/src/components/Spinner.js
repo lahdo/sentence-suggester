@@ -1,10 +1,5 @@
-import React, {Component} from 'react'
-// easily import from entry
-import {
-    BeatLoading, BounceLoading, CircularLoading,
-    ClockLoading, RotateLoading, SpinLoading,
-    WaveLoading, DashLoading, CopperLoading
-} from 'respinner'
+import React, {Component} from 'react';
+import { BounceLoading } from 'respinner';
 
 export default class Spinner extends Component {
     constructor(props) {

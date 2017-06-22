@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {Button, Col, Grid, Row} from "react-bootstrap";
 import ReactDOM from 'react-dom';
 import Highlighter from 'react-highlight-words';
+
+import Spinner from "../components/Spinner";
 import TextInput from '../components/TextInput';
-// import EntityText from '../components/EntityText';
 import * as api from '../utils/api.js'
 
 import styles from '../App.css';
@@ -16,7 +17,8 @@ export default class NamedEntityRecognizer extends Component {
         this.state = {
             entities: [],
             selectedEntity: '',
-            inputtedText: ''
+            inputtedText: '',
+            showSpinner: false
         };
 
         this.handleSearch = this.handleSearch.bind(this);
@@ -37,11 +39,13 @@ export default class NamedEntityRecognizer extends Component {
     }
 
     doSearchRequest(searchObject) {
+        this.setState({"showSpinner": true});
         api.fetchEntities(searchObject).then(
             response => response.json()
         ).then(
             data => {
                 this.setState({"entities": data});
+                this.setState({"showSpinner": false});
             }
         )
     }
@@ -58,7 +62,8 @@ export default class NamedEntityRecognizer extends Component {
 
     render() {
         return (
-            <div >
+            <div>
+                <Spinner showSpinner={ this.state.showSpinner } />
                 <Grid>
                     <Row>
                         <Col md={6} mdOffset={3}>

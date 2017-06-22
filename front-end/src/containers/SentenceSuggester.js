@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import {debounce} from 'lodash';
 
-import Layout from '../components/Layout.js';
-import NavigationBar from "../components/NavigationBar";
 import Content from '../components/Content.js';
-import Footer from '../components/Footer.js';
 
 import * as api from '../utils/api.js'
 

@@ -318,3 +318,9 @@ button.entityButton.btn.btn-default {
     bottom: 0;
     right: 0;
 }
+
+.summary.entityText li{
+    margin-bottom: 15px;
+    margin-left: -10px;
+    margin-right: 5px;
+}

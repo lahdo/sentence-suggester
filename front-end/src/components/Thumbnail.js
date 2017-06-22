@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-
 import {Thumbnail, Label} from 'react-bootstrap';
 
 export default class CustomThumbnail extends Component {
