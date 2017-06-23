@@ -292,6 +292,10 @@ button.entityButton.btn.btn-default {
     outline: 0;
 }
 
+.main-buttons .btn {
+    margin-right: 5px;
+}
+
 .spinners {
     margin: 0 60px;
 }

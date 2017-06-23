@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
-import {Button, Col, Grid, Row} from "react-bootstrap";
+import {Col, Grid, Row} from "react-bootstrap";
 import ReactDOM from 'react-dom';
-import Highlighter from 'react-highlight-words';
 
 import Spinner from "../components/Spinner";
 import TextInput from '../components/TextInput';
+import Enrichments from "../components/Enrichments";
+import MainButtons from "../components/MainButtons";
 import * as api from '../utils/api.js'
 import {entitiesForEnrichment} from '../constants.js';
 
 import styles from '../App.css';
-import Enrichments from "../components/Enrichments";
+
 
 export default class ContentEnricher extends Component {
     constructor(props) {
@@ -27,10 +28,12 @@ export default class ContentEnricher extends Component {
 
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
-        this.onClick = this.onClick.bind(this);
+        this.onMainButtonClick = this.onMainButtonClick.bind(this);
+        this.onRandomTextButtonClick = this.onRandomTextButtonClick.bind(this);
         this.getEnrichments = this.getEnrichments.bind(this);
         this.setEnrichments = this.setEnrichments.bind(this);
         this.processEntities = this.processEntities.bind(this);
+        this.getRandomText = this.getRandomText.bind(this);
     }
 
     handleSearch(text) {
@@ -105,10 +108,29 @@ export default class ContentEnricher extends Component {
         }
     }
 
-    onClick() {
-        let text = ReactDOM.findDOMNode(this.refs.textForKeywords).textContent;
+    getRandomText() {
+        this.setState({"showSpinner": true});
+        return api.fetchRandomText().then(
+            response => response.json()
+        ).then(
+            data => {
+                this.setState({"inputtedText": data});
+                this.setState({"showSpinner": false});
+                return data;
+            }
+        )
+    }
+
+    onMainButtonClick() {
+        const text = ReactDOM.findDOMNode(this.refs.page).textContent;
         this.setState({"inputtedText": text});
         this.handleSearch(text);
+    }
+
+    onRandomTextButtonClick() {
+        this.getRandomText().then ( data =>
+            ReactDOM.findDOMNode(this.refs.page).textContent = data
+        );
     }
 
     render() {
@@ -125,26 +147,26 @@ export default class ContentEnricher extends Component {
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
+                            <MainButtons onMainButtonClick={ this.onMainButtonClick }
+                                         onRandomTextButtonClick={ this.onRandomTextButtonClick }/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6} mdOffset={3}>
                             <div className={ styles.styleSelector }>
-                                <Button bsStyle="primary"
-                                        onClick={this.onClick}>
-                                    Enrich Content
-                                </Button>
                             </div>
                         </Col>
                     </Row>
                     {
                         this.state.enrichments.length ?
-                            <div className="entityText">
-                                <Enrichments
-                                    enrichments={ this.state.enrichments }
-                                />
-                            </div>
+                            <Enrichments
+                                enrichments={ this.state.enrichments }
+                            />
                             : null
                     }
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <TextInput ref="textForKeywords"/>
+                            <TextInput ref="page"/>
                         </Col>
                     </Row>
                 </Grid>

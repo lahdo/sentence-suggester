@@ -12,6 +12,7 @@ const ENDPOINTS = {
     entities: 'entities/',
     summary: 'summary/',
     contentEnrichment: 'content-enrichment/',
+    randomText: 'random-text/',
 };
 
 function getApiAddress(endpoint) {
@@ -43,6 +44,7 @@ export const fetchSentiments = makeRequest(ENDPOINTS['sentiment']);
 export const fetchEntities = makeRequest(ENDPOINTS['entities']);
 export const fetchSummary = makeRequest(ENDPOINTS['summary']);
 export const fetchContentEnrichment = makeRequest(ENDPOINTS['contentEnrichment']);
+export const fetchRandomText = makeRequest(ENDPOINTS['randomText']);
 
 export function getJargons() {
     const endpoint = getApiAddress(ENDPOINTS['jargons']);

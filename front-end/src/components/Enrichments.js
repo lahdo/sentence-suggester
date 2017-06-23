@@ -62,10 +62,12 @@ export default class Enrichments extends Component {
                                 return (
                                     <Row key={i}>
                                         <Col md={6} mdOffset={3}>
-                                            <h3>{ enrichment.title }</h3>
-                                            <p><i>{ enrichment.url }</i></p>
-                                            <p>{ enrichment.summary }</p>
-                                            <Thumbnail src={ enrichment.images[0] } />
+                                            <div className="entityText">
+                                                <h3>{ enrichment.title }</h3>
+                                                <p><i>{ enrichment.url }</i></p>
+                                                <p>{ enrichment.summary }</p>
+                                                <Thumbnail src={ enrichment.images[0] }/>
+                                            </div>
                                         </Col>
                                     </Row>
                                 );
