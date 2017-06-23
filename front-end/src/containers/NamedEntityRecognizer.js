@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Button, Col, Grid, Row} from "react-bootstrap";
+import {Col, Grid, Row} from "react-bootstrap";
 import ReactDOM from 'react-dom';
 import Highlighter from 'react-highlight-words';
 
+import MainButtons from "../components/MainButtons";
 import Spinner from "../components/Spinner";
 import TextInput from '../components/TextInput';
 import * as api from '../utils/api.js'
@@ -23,8 +24,10 @@ export default class NamedEntityRecognizer extends Component {
 
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
-        this.onClick = this.onClick.bind(this);
+        this.onMainButtonClick = this.onMainButtonClick.bind(this);
         this.onEntityButtonClick = this.onEntityButtonClick.bind(this);
+        this.setSpinner = this.setSpinner.bind(this);
+        this.setInputtedText = this.setInputtedText.bind(this);
     }
 
     handleSearch(text) {
@@ -50,10 +53,21 @@ export default class NamedEntityRecognizer extends Component {
         )
     }
 
-    onClick() {
-        let text = ReactDOM.findDOMNode(this.refs.textForKeywords).textContent;
-        this.setState({"inputtedText": text});
-        this.handleSearch(text);
+    onMainButtonClick() {
+        let text = ReactDOM.findDOMNode(this.refs.page).textContent;
+        if(text.length) {
+            this.setState({"inputtedText": text});
+            this.handleSearch(text);
+        }
+    }
+
+    setSpinner(value) {
+        this.setState({"showSpinner": value});
+    }
+
+    setInputtedText(value) {
+        ReactDOM.findDOMNode(this.refs.page).textContent = value;
+        this.setState({"inputtedText": value});
     }
 
     onEntityButtonClick(e, entity) {
@@ -74,12 +88,10 @@ export default class NamedEntityRecognizer extends Component {
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <div className={ styles.styleSelector }>
-                                <Button bsStyle="primary"
-                                        onClick={this.onClick}>
-                                    Analyze Entities
-                                </Button>
-                            </div>
+                            <MainButtons mainButtonText="Analyze Entities"
+                                         setInputtedText={ this.setInputtedText }
+                                         setSpinner={ this.setSpinner }
+                                         onMainButtonClick={ this.onMainButtonClick } />
                         </Col>
                     </Row>
                     <Row>
@@ -106,7 +118,7 @@ export default class NamedEntityRecognizer extends Component {
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <TextInput ref="textForKeywords"/>
+                            <TextInput ref="page"/>
                         </Col>
                     </Row>
                 </Grid>

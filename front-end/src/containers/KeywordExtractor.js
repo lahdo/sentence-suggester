@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {Button, Col, Grid, Row} from "react-bootstrap";
+import { Col, Grid, Row} from "react-bootstrap";
 import Unsplash from 'unsplash-js';
 
+import MainButtons from "../components/MainButtons";
 import TextInput from '../components/TextInput';
 import Keywords from '../components/Keywords';
 import ImageGrid from '../components/ImageGrid';
@@ -28,8 +29,10 @@ export default class KeywordExtractor extends Component {
 
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
-        this.onClick = this.onClick.bind(this);
+        this.onMainButtonClick = this.onMainButtonClick.bind(this);
         this.getImages = this.getImages.bind(this);
+        this.setSpinner = this.setSpinner.bind(this);
+        this.setInputtedText = this.setInputtedText.bind(this);
     }
 
     handleSearch(text, ratio = 0.1) {
@@ -85,10 +88,21 @@ export default class KeywordExtractor extends Component {
         }
     }
 
-    onClick() {
-        let text = ReactDOM.findDOMNode(this.refs.textForKeywords).textContent;
-        this.setState({"inputtedText": text});
-        this.handleSearch(text);
+    onMainButtonClick() {
+        let text = ReactDOM.findDOMNode(this.refs.page).textContent;
+        if(text.length) {
+            this.setState({"inputtedText": text});
+            this.handleSearch(text);
+        }
+    }
+
+    setSpinner(value) {
+        this.setState({"showSpinner": value});
+    }
+
+    setInputtedText(value) {
+        ReactDOM.findDOMNode(this.refs.page).textContent = value;
+        this.setState({"inputtedText": value});
     }
 
     render() {
@@ -105,13 +119,11 @@ export default class KeywordExtractor extends Component {
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <div className={ styles.styleSelector }>
-                                <Button bsStyle="primary"
-                                        onClick={this.onClick}>
-                                    Extract Keywords
-                                </Button>
-                                <Keywords keywords={ this.state.keywords }/>
-                            </div>
+                            <MainButtons mainButtonText="Extract Keywords"
+                                         setInputtedText={ this.setInputtedText }
+                                         setSpinner={ this.setSpinner }
+                                         onMainButtonClick={ this.onMainButtonClick } />
+                            <Keywords keywords={ this.state.keywords }/>
                         </Col>
                     </Row>
                     <ImageGrid images={this.state.images}
@@ -119,7 +131,7 @@ export default class KeywordExtractor extends Component {
                                haveResults={this.state.haveResults}/>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <TextInput ref="textForKeywords"/>
+                            <TextInput ref="page"/>
                         </Col>
                     </Row>
                 </Grid>

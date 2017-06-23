@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import TextInput from '../components/TextInput';
 import Sentences from '../components/Sentences';
 import Spinner from "../components/Spinner";
+import MainButtons from "../components/MainButtons";
 
 import * as api from '../utils/api.js';
 import * as utils from '../utils/sentimentsUtils';
@@ -24,8 +25,10 @@ export default class SentimentAnalyzer extends Component {
 
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
-        this.onClick = this.onClick.bind(this);
+        this.onMainButtonClick = this.onMainButtonClick.bind(this);
         this.getGeneralScore = this.getGeneralScore.bind(this);
+        this.setSpinner = this.setSpinner.bind(this);
+        this.setInputtedText = this.setInputtedText.bind(this);
     }
 
     handleSearch(text) {
@@ -53,10 +56,21 @@ export default class SentimentAnalyzer extends Component {
         )
     }
 
-    onClick() {
-        let text = ReactDOM.findDOMNode(this.refs.textForKeywords).textContent;
-        this.setState({"inputtedText": text});
-        this.handleSearch(text);
+    onMainButtonClick() {
+        let text = ReactDOM.findDOMNode(this.refs.page).textContent;
+        if(text.length) {
+            this.setState({"inputtedText": text});
+            this.handleSearch(text);
+        }
+    }
+
+    setSpinner(value) {
+        this.setState({"showSpinner": value});
+    }
+
+    setInputtedText(value) {
+        ReactDOM.findDOMNode(this.refs.page).textContent = value;
+        this.setState({"inputtedText": value});
     }
 
     getGeneralScore(polarity, subjectivity) {
@@ -84,7 +98,7 @@ export default class SentimentAnalyzer extends Component {
         console.log(styles);
         return (
             <div>
-                <Spinner showSpinner={ this.state.showSpinner } />
+                <Spinner showSpinner={ this.state.showSpinner }/>
                 <Grid>
                     <Row>
                         <Col md={6} mdOffset={3}>
@@ -95,12 +109,10 @@ export default class SentimentAnalyzer extends Component {
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <div className={ styles.styleSelector }>
-                                <Button bsStyle="primary"
-                                        onClick={this.onClick}>
-                                    Analyze Sentiment
-                                </Button>
-                            </div>
+                            <MainButtons mainButtonText="Analyze Sentiment"
+                                         setInputtedText={ this.setInputtedText }
+                                         setSpinner={ this.setSpinner }
+                                         onMainButtonClick={ this.onMainButtonClick }/>
                         </Col>
                     </Row>
                     <Row>
@@ -123,7 +135,7 @@ export default class SentimentAnalyzer extends Component {
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <TextInput ref="textForKeywords"/>
+                            <TextInput ref="page"/>
                         </Col>
                     </Row>
                 </Grid>

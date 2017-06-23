@@ -29,11 +29,11 @@ export default class ContentEnricher extends Component {
         this.handleSearch = this.handleSearch.bind(this);
         this.doSearchRequest = this.doSearchRequest.bind(this);
         this.onMainButtonClick = this.onMainButtonClick.bind(this);
-        this.onRandomTextButtonClick = this.onRandomTextButtonClick.bind(this);
         this.getEnrichments = this.getEnrichments.bind(this);
         this.setEnrichments = this.setEnrichments.bind(this);
         this.processEntities = this.processEntities.bind(this);
-        this.getRandomText = this.getRandomText.bind(this);
+        this.setSpinner = this.setSpinner.bind(this);
+        this.setInputtedText = this.setInputtedText.bind(this);
     }
 
     handleSearch(text) {
@@ -108,29 +108,21 @@ export default class ContentEnricher extends Component {
         }
     }
 
-    getRandomText() {
-        this.setState({"showSpinner": true});
-        return api.fetchRandomText().then(
-            response => response.json()
-        ).then(
-            data => {
-                this.setState({"inputtedText": data});
-                this.setState({"showSpinner": false});
-                return data;
-            }
-        )
-    }
-
     onMainButtonClick() {
         const text = ReactDOM.findDOMNode(this.refs.page).textContent;
-        this.setState({"inputtedText": text});
-        this.handleSearch(text);
+        if(text.length) {
+            this.setState({"inputtedText": text});
+            this.handleSearch(text);
+        }
     }
 
-    onRandomTextButtonClick() {
-        this.getRandomText().then ( data =>
-            ReactDOM.findDOMNode(this.refs.page).textContent = data
-        );
+    setSpinner(value) {
+        this.setState({"showSpinner": value});
+    }
+
+    setInputtedText(value) {
+        ReactDOM.findDOMNode(this.refs.page).textContent = value;
+        this.setState({"inputtedText": value});
     }
 
     render() {
@@ -147,8 +139,10 @@ export default class ContentEnricher extends Component {
                     </Row>
                     <Row>
                         <Col md={6} mdOffset={3}>
-                            <MainButtons onMainButtonClick={ this.onMainButtonClick }
-                                         onRandomTextButtonClick={ this.onRandomTextButtonClick }/>
+                            <MainButtons mainButtonText="Enrich Content"
+                                         setInputtedText={ this.setInputtedText }
+                                         setSpinner={ this.setSpinner }
+                                         onMainButtonClick={ this.onMainButtonClick } />
                         </Col>
                     </Row>
                     <Row>
